@@ -1,0 +1,6 @@
+services:
+  - type: web
+    name: boussala-ikhtisas
+    runtime: static
+    buildCommand: ""
+    staticPublishPath: .
