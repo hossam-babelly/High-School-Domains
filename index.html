@@ -261,6 +261,16 @@ footer{margin-top:30px;text-align:center;color:var(--muted);font-size:.74rem;lin
 @media (prefers-reduced-motion: reduce){
   *,*::before,*::after{animation-duration:.01ms !important;animation-iteration-count:1 !important;transition-duration:.01ms !important}
 }
+
+/* ====== خلفيات نقشية (الترويسة المنقوشة) ====== */
+.oc .bgart{position:absolute;inset:0 0 auto 0;height:62%;width:100%;pointer-events:none;z-index:0;
+  -webkit-mask-image:linear-gradient(180deg,#000 0,#000 44%,transparent 100%);mask-image:linear-gradient(180deg,#000 0,#000 44%,transparent 100%)}
+.oc .head{z-index:1}
+.q{position:relative;overflow:hidden}
+.q .bgart{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:0;
+  -webkit-mask-image:linear-gradient(180deg,#000 0,transparent 80%);mask-image:linear-gradient(180deg,#000 0,transparent 80%)}
+.q > :not(.bgart){position:relative;z-index:1}
+@media print{.bgart{display:none !important}}
 </style>
 </head>
 <body>
@@ -448,8 +458,9 @@ var LV=["#97A1C6","#8FA0FF","#5BC0F8","#4ED8A8","#F2C664"];
 var MIDL="بين هذا وذاك";
 function levelIcon(i,c){
   var s='<svg viewBox="0 0 24 24" fill="none" style="filter:drop-shadow(0 0 4px '+c+'66)">';
-  for(var k=0;k<5;k++){ var hgt=6+k*3, x=3+k*4;
-    s+='<rect x="'+x+'" y="'+(21-hgt)+'" width="2.6" height="'+hgt+'" rx="1.2" fill="'+(k<=i?c:'rgba(128,140,190,.28)')+'"/>'; }
+  for(var k=0;k<5;k++){ var r=1.1+k*.45, x=3.2+k*4.4;
+    s+='<circle cx="'+x+'" cy="12" r="'+r+'" fill="'+(k<=i?c:'rgba(128,140,190,.28)')+'"/>'; }
+  s+='<circle cx="'+(3.2+i*4.4)+'" cy="12" r="'+(1.1+i*.45+2.2)+'" stroke="'+c+'" stroke-width="1" opacity=".5"/>';
   return s+'</svg>';
 }
 function ansIcon(i,c){
@@ -527,6 +538,327 @@ var GLYPHS={
  board:'<rect x="4" y="4" width="16" height="16" rx="2"/><circle cx="9" cy="9" r="1.4"/><circle cx="15" cy="15" r="1.4"/><path d="M9 10.4V15h4.6M15 13.6V9h-3"/>',
  snow:'<path d="M12 3v18M12 12 5.5 8.25M12 12l6.5-3.75M12 12l-6.5 3.75M12 12l6.5 3.75M8.8 4.8 12 6.6l3.2-1.8M8.8 19.2 12 17.4l3.2 1.8M4.2 10.2l1.3 1.8-1.3 1.8M19.8 10.2l-1.3 1.8 1.3 1.8"/>'
 };
+/* =====================================================================
+   مكتبة النقوش الخلفية — مولّدات إجرائية بلا تكرار (أسلوب «الترويسة المنقوشة»)
+   viewBox 900×280 · كل نقش يخف نحو الأسفل بدالة fade · بذرة ثابتة لكل بطاقة
+   ===================================================================== */
+var AW=900, AH=280;
+function rng(seed){var s=(seed>>>0)||7;return function(){s=(s*1664525+1013904223)>>>0;return s/4294967296;};}
+function fade(y){return Math.max(0,1-y/AH*.85);}
+function hashStr(t){var h=2166136261;for(var i=0;i<t.length;i++){h^=t.charCodeAt(i);h=Math.imul(h,16777619);}return h>>>0;}
+function f2(v){return (+v).toFixed(2);}
+function f0(v){return (+v).toFixed(0);}
+var ARTS={};
+
+/* --- أصفار وواحدات --- */
+ARTS.binary=function(c,seed){var r=rng(seed),s='';
+ for(var y=14;y<AH;y+=16){for(var x=0;x<AW;x+=13){if(r()<.34)continue;var fs=6.5+r()*7,op=.34*fade(y)*(.45+r()*.6);if(op<.03)continue;
+   s+='<text x="'+f0(x+r()*6)+'" y="'+f0(y+r()*5)+'" font-family="Poppins" font-size="'+fs.toFixed(1)+'" font-weight="'+(r()<.2?700:500)+'" fill="'+c+'" opacity="'+f2(op)+'">'+(r()<.5?'0':'1')+'</text>';}}
+ return s;};
+
+/* --- لوحة PCB (مسارات متوازية بانحناءات 45° + فتحات + رقاقات) --- */
+function pcbGen(c,seed,chips,buses){var r=rng(seed),s='',P=18;
+ function via(x,y,op){return '<circle cx="'+f0(x)+'" cy="'+f0(y)+'" r="3.2" stroke="'+c+'" stroke-width="1.4" fill="none" opacity="'+op+'"/><circle cx="'+f0(x)+'" cy="'+f0(y)+'" r="1.1" fill="'+c+'" opacity="'+op+'"/>';}
+ for(var b=0;b<buses;b++){var y=P*(1+Math.floor(r()*13)),x=-20+Math.floor(r()*3)*P,n=1+Math.floor(r()*3),dir=r()<.5?1:-1,segs=[[x,y]],px=x,py=y;
+   while(px<AW+20){px+=P*(2+Math.floor(r()*6));segs.push([px,py]);
+     if(r()<.6){var j=P*(1+Math.floor(r()*2));if(py+dir*j<P||py+dir*j>AH-P)dir=-dir;px+=j;py+=dir*j;segs.push([px,py]);if(r()<.4)dir=-dir;}}
+   var op=f2((.22+r()*.16)*fade(y));
+   for(var k=0;k<n;k++){var off=k*6-(n-1)*3,d='';segs.forEach(function(p,i){d+=(i?' L':'M')+p[0]+' '+(p[1]+off);});
+     s+='<path d="'+d+'" stroke="'+c+'" stroke-width="1.1" fill="none" stroke-linejoin="round" opacity="'+op+'"/>'+via(segs[0][0],segs[0][1]+off,op);}}
+ for(var i=0;i<chips;i++){var cx=60+r()*(AW-160),cy=P*(2+Math.floor(r()*9)),w=44+r()*30,h=26+r()*14,op2=f2((.28+r()*.1)*fade(cy));
+   s+='<rect x="'+f0(cx)+'" y="'+f0(cy)+'" width="'+f0(w)+'" height="'+f0(h)+'" rx="2" stroke="'+c+'" stroke-width="1.2" fill="none" opacity="'+op2+'"/><circle cx="'+f0(cx+6)+'" cy="'+f0(cy+6)+'" r="1.6" fill="'+c+'" opacity="'+op2+'"/>';
+   var pins=Math.floor(w/9);for(var t=0;t<pins;t++){var xx=f0(cx+5+t*((w-10)/(pins-1)));s+='<path d="M'+xx+' '+f0(cy)+'v-6M'+xx+' '+f0(cy+h)+'v6" stroke="'+c+'" stroke-width="1.2" opacity="'+op2+'"/>';}}
+ for(var v=0;v<26;v++){var vx=P*Math.floor(r()*(AW/P)),vy=P*(1+Math.floor(r()*(AH/P-1)));s+=via(vx,vy,f2((.2+r()*.15)*fade(vy)));}
+ return s;}
+ARTS.pcb=function(c,seed){return pcbGen(c,seed,5,9);};
+ARTS.chip=function(c,seed){return pcbGen(c,seed,10,5);};
+
+/* --- أمواج اتصالات --- */
+ARTS.waves=function(c,seed){var r=rng(seed),s='';
+ for(var i=0;i<4;i++){var cx=100+r()*(AW-200),cy=20+r()*60;
+   for(var R=18;R<170;R+=22){var op=f2((.3-R/700)*fade(cy));s+='<path d="M'+f0(cx-R)+' '+f0(cy)+'a'+R+' '+R+' 0 0 1 '+(2*R)+' 0" stroke="'+c+'" stroke-width="'+(R<60?1.2:.8)+'" fill="none" opacity="'+op+'"/>';}
+   s+='<circle cx="'+f0(cx)+'" cy="'+f0(cy)+'" r="3" fill="'+c+'" opacity=".45"/><path d="M'+f0(cx)+' '+f0(cy)+'v22" stroke="'+c+'" stroke-width="1.4" opacity=".4"/>';}
+ for(var L=0;L<2;L++){var y0=150+L*70,d='M0 '+y0,A=8+L*6,fr=.045+L*.02;for(var x=0;x<=AW;x+=6)d+=' L'+x+' '+f0(y0+Math.sin(x*fr)*A*(1+.4*Math.sin(x*.01)));s+='<path d="'+d+'" stroke="'+c+'" stroke-width="1" fill="none" opacity="'+f2(.3*fade(y0))+'"/>';}
+ return s;};
+
+/* --- قدرة كهربائية: ثلاث أطوار + أبراج --- */
+ARTS.power=function(c,seed){var r=rng(seed),s='';
+ for(var ph=0;ph<3;ph++){var d='';for(var x=0;x<=AW;x+=6){var y=70+Math.sin(x*.022+ph*2.09)*26;d+=(x?' L':'M')+x+' '+f0(y);}s+='<path d="'+d+'" stroke="'+c+'" stroke-width="1.1" fill="none" opacity="'+f2(.26-ph*.05)+'"/>';}
+ for(var t=0;t<4;t++){var bx=90+t*230+r()*60,by=250,h=120+r()*40,w=26;var op=f2(.3*fade(by-h));
+   s+='<path d="M'+f0(bx-w)+' '+by+'L'+f0(bx-6)+' '+f0(by-h)+'h12L'+f0(bx+w)+' '+by+'" stroke="'+c+'" stroke-width="1.2" fill="none" opacity="'+op+'"/>';
+   for(var k=1;k<5;k++){var yy=by-h*k/5,ww=w*(1-k/5)+6;s+='<path d="M'+f0(bx-ww)+' '+f0(yy)+'h'+f0(2*ww)+'M'+f0(bx-ww)+' '+f0(yy)+'L'+f0(bx+ww*(1-1/k*.5))+' '+f0(yy-h/5)+'" stroke="'+c+'" stroke-width=".8" opacity="'+op+'"/>';}
+   s+='<path d="M'+f0(bx-38)+' '+f0(by-h*.55)+'h76M'+f0(bx-30)+' '+f0(by-h*.75)+'h60" stroke="'+c+'" stroke-width="1.2" opacity="'+op+'"/>';}
+ return s;};
+
+/* --- تروس --- */
+ARTS.gears=function(c,seed){var r=rng(seed),s='';
+ for(var i=0;i<9;i++){var cx=40+r()*(AW-80),cy=30+r()*(AH-60),R=14+r()*28,n=Math.max(8,Math.round(R/2.6)),d='',op=f2((.22+r()*.16)*fade(cy));
+   for(var k=0;k<n*2;k++){var a=k*Math.PI/n,rr=k%2?R:R*.8;var a2=a+Math.PI/n*.45;d+=(k?' L':'M')+f0(cx+rr*Math.cos(a))+' '+f0(cy+rr*Math.sin(a))+' L'+f0(cx+rr*Math.cos(a2))+' '+f0(cy+rr*Math.sin(a2));}
+   s+='<path d="'+d+' Z" stroke="'+c+'" stroke-width="1.1" fill="none" stroke-linejoin="round" opacity="'+op+'"/><circle cx="'+f0(cx)+'" cy="'+f0(cy)+'" r="'+f0(R*.45)+'" stroke="'+c+'" stroke-width="1" fill="none" opacity="'+op+'"/><circle cx="'+f0(cx)+'" cy="'+f0(cy)+'" r="'+f0(R*.12)+'" fill="'+c+'" opacity="'+op+'"/>';}
+ return s;};
+
+/* --- طيران: خطوط انسيابية + مقطع جناح --- */
+ARTS.aero=function(c,seed){var r=rng(seed),s='';
+ for(var i=0;i<12;i++){var y0=12+i*22+r()*8,d='M0 '+f0(y0);for(var x=0;x<=AW;x+=30){var yy=y0+Math.sin((x+i*40)*.012)*(6+i*.6);d+=' Q'+f0(x+15)+' '+f0(yy+3)+' '+f0(x+30)+' '+f0(yy);}s+='<path d="'+d+'" stroke="'+c+'" stroke-width=".9" fill="none" opacity="'+f2(.28*fade(y0))+'"/>';}
+ for(var a=0;a<2;a++){var ax=180+a*420+r()*80,ay=70+a*90,L=150+r()*60;s+='<path d="M'+f0(ax)+' '+f0(ay)+'c'+f0(L*.25)+' -'+f0(L*.12)+' '+f0(L*.7)+' -'+f0(L*.1)+' '+f0(L)+' 0c-'+f0(L*.3)+' '+f0(L*.06)+' -'+f0(L*.7)+' '+f0(L*.04)+' -'+f0(L)+' 0Z" stroke="'+c+'" stroke-width="1.3" fill="'+c+'" fill-opacity=".06" opacity="'+f2(.4*fade(ay))+'"/>';}
+ return s;};
+
+/* --- ذرة --- */
+ARTS.atom=function(c,seed){var r=rng(seed),s='';
+ for(var i=0;i<5;i++){var cx=70+r()*(AW-140),cy=40+r()*(AH-90),R=26+r()*40,op=f2((.24+r()*.14)*fade(cy));
+   for(var k=0;k<3;k++)s+='<ellipse cx="'+f0(cx)+'" cy="'+f0(cy)+'" rx="'+f0(R)+'" ry="'+f0(R*.38)+'" transform="rotate('+(k*60+r()*20)+' '+f0(cx)+' '+f0(cy)+')" stroke="'+c+'" stroke-width="1" fill="none" opacity="'+op+'"/>';
+   s+='<circle cx="'+f0(cx)+'" cy="'+f0(cy)+'" r="3" fill="'+c+'" opacity="'+op+'"/><circle cx="'+f0(cx+R*.7)+'" cy="'+f0(cy-R*.12)+'" r="2" fill="'+c+'" opacity="'+op+'"/>';}
+ return s;};
+
+/* --- شبكة بلورية سداسية --- */
+ARTS.crystal=function(c,seed){var r=rng(seed),s='',R=22,h=R*Math.sqrt(3)/2;
+ for(var row=0;row<9;row++){for(var col=-1;col<24;col++){if(r()<.3)continue;var cx=col*R*3+(row%2?R*1.5:0),cy=20+row*h,op=f2((.16+r()*.16)*fade(cy)),d='';
+   for(var k=0;k<6;k++){var a=Math.PI/3*k;d+=(k?' L':'M')+f0(cx+R*Math.cos(a))+' '+f0(cy+R*Math.sin(a));}
+   s+='<path d="'+d+' Z" stroke="'+c+'" stroke-width=".9" fill="none" opacity="'+op+'"/>';if(r()<.4)s+='<circle cx="'+f0(cx)+'" cy="'+f0(cy)+'" r="1.6" fill="'+c+'" opacity="'+op+'"/>';}}
+ return s;};
+
+/* --- مسقط معماري --- */
+ARTS.plan=function(c,seed){var r=rng(seed),s='',G=20;
+ for(var x=0;x<=AW;x+=G)s+='<path d="M'+x+' 0V'+AH+'" stroke="'+c+'" stroke-width=".5" opacity=".07"/>';
+ for(var y=0;y<=AH;y+=G)s+='<path d="M0 '+y+'H'+AW+'" stroke="'+c+'" stroke-width=".5" opacity=".07"/>';
+ var X=70,Y=34,PW=600,PH=150,op=.44,wall='stroke="'+c+'" stroke-width="3" fill="none" opacity="'+op+'"',thin='stroke="'+c+'" stroke-width="1" fill="none" opacity="'+op+'"';
+ s+='<rect x="'+X+'" y="'+Y+'" width="'+PW+'" height="'+PH+'" '+wall+'/>';
+ var v1=X+PW*(.3+r()*.15),v2=X+PW*(.62+r()*.12),h1=Y+PH*(.45+r()*.15);
+ s+='<path d="M'+f0(v1)+' '+Y+'V'+(Y+PH)+'M'+f0(v2)+' '+Y+'V'+(Y+PH)+'M'+X+' '+f0(h1)+'H'+f0(v2)+'" stroke="'+c+'" stroke-width="1.4" fill="none" opacity="'+op+'"/>';
+ function door(x,y,vert){var R=22;return vert?'<path d="M'+x+' '+y+'v-'+R+'" stroke="var(--disc)" stroke-width="3.5"/><path d="M'+x+' '+y+'a'+R+' '+R+' 0 0 0 '+R+' -'+R+'" '+thin+'/>':'<path d="M'+x+' '+y+'h'+R+'" stroke="var(--disc)" stroke-width="3.5"/><path d="M'+x+' '+y+'a'+R+' '+R+' 0 0 1 '+R+' '+R+'" '+thin+'/>';}
+ s+=door(f0(v1),f0(h1-30),true)+door(f0(v2),f0(Y+PH-40),true)+door(f0(X+60),f0(h1),false)+door(f0(v1+40),f0(h1),false);
+ for(var wx=X+40;wx<X+PW-40;wx+=110)s+='<path d="M'+wx+' '+(Y-3)+'h44M'+wx+' '+(Y+3)+'h44M'+wx+' '+(Y-5)+'v10M'+(wx+44)+' '+(Y-5)+'v10" '+thin+'/>';
+ var ax=[X,v1,v2,X+PW],L=["A","B","C","D"];
+ ax.forEach(function(x,i){s+='<path d="M'+f0(x)+' '+(Y-14)+'V'+(Y+PH+14)+'" stroke="'+c+'" stroke-width=".7" stroke-dasharray="6 5" opacity=".28"/><circle cx="'+f0(x)+'" cy="'+(Y-24)+'" r="8" '+thin+'/><text x="'+f0(x)+'" y="'+(Y-20.5)+'" text-anchor="middle" font-family="Poppins" font-size="8" fill="'+c+'" opacity="'+op+'">'+L[i]+'</text>';});
+ [Y,h1,Y+PH].forEach(function(y,i){s+='<path d="M'+(X-14)+' '+f0(y)+'H'+(X+PW+14)+'" stroke="'+c+'" stroke-width=".7" stroke-dasharray="6 5" opacity=".28"/><circle cx="'+(X+PW+26)+'" cy="'+f0(y)+'" r="8" '+thin+'/><text x="'+(X+PW+26)+'" y="'+f0(y+3)+'" text-anchor="middle" font-family="Poppins" font-size="8" fill="'+c+'" opacity="'+op+'">'+(i+1)+'</text>';});
+ var dy=Y+PH+34;s+='<path d="M'+X+' '+dy+'H'+(X+PW)+'" '+thin+'/>';
+ ax.forEach(function(x,i){s+='<path d="M'+f0(x-4)+' '+(dy+4)+'l8 -8M'+f0(x)+' '+(dy-6)+'v12" '+thin+'/>';if(i<3){s+='<text x="'+f0((x+ax[i+1])/2)+'" y="'+(dy-5)+'" text-anchor="middle" font-family="Poppins" font-size="7.5" fill="'+c+'" opacity="'+op+'">'+((ax[i+1]-x)/100).toFixed(2)+'</text>';}});
+ s+='<circle cx="'+(X+PW+70)+'" cy="'+(Y+30)+'" r="14" '+thin+'/><path d="M'+(X+PW+70)+' '+(Y+42)+'V'+(Y+18)+'l-5 9h10l-5-9" '+thin+'/>';
+ return s;};
+
+/* --- جسر وجملون (مدنية) --- */
+ARTS.bridge=function(c,seed){var r=rng(seed),s='',y0=90,op='.34';
+ s+='<path d="M0 '+y0+'H'+AW+'M0 '+(y0+34)+'H'+AW+'" stroke="'+c+'" stroke-width="1.6" opacity="'+op+'"/>';
+ for(var x=0;x<AW;x+=44){s+='<path d="M'+x+' '+(y0+34)+'L'+(x+22)+' '+y0+'L'+(x+44)+' '+(y0+34)+'M'+x+' '+y0+'V'+(y0+34)+'" stroke="'+c+'" stroke-width="1" fill="none" opacity="'+op+'"/>';}
+ var ay=190;s+='<path d="M60 '+ay+'Q450 20 840 '+ay+'" stroke="'+c+'" stroke-width="1.6" fill="none" opacity=".3"/><path d="M60 '+ay+'H840" stroke="'+c+'" stroke-width="1.2" opacity=".28"/>';
+ for(var px=110;px<840;px+=73){var yy=ay-(1-Math.pow((px-450)/390,2))*170;s+='<path d="M'+px+' '+f0(yy)+'V'+ay+'" stroke="'+c+'" stroke-width=".9" opacity=".26"/>';}
+ for(var p=0;p<3;p++){var bx=200+p*250+r()*40;s+='<path d="M'+f0(bx-10)+' '+ay+'v60h20v-60" stroke="'+c+'" stroke-width="1.2" fill="none" opacity="'+f2(.3*fade(ay))+'"/>';}
+ return s;};
+
+/* --- تفرعات ورقية/شجرية --- */
+ARTS.leaf=function(c,seed){var r=rng(seed),s='';
+ function branch(x,y,a,len,w,d){if(d>4||len<8)return;var x2=x+Math.cos(a)*len,y2=y+Math.sin(a)*len;
+   s+='<path d="M'+f0(x)+' '+f0(y)+'Q'+f0((x+x2)/2+Math.cos(a+1.57)*len*.15)+' '+f0((y+y2)/2+Math.sin(a+1.57)*len*.15)+' '+f0(x2)+' '+f0(y2)+'" stroke="'+c+'" stroke-width="'+w.toFixed(1)+'" fill="none" stroke-linecap="round" opacity="'+f2(.32*fade(Math.min(y,y2)))+'"/>';
+   var n=2+(r()<.4?1:0);for(var i=0;i<n;i++)branch(x2,y2,a+(r()-.5)*1.3,len*(.6+r()*.2),w*.7,d+1);}
+ for(var i=0;i<7;i++)branch(60+i*130+r()*40,AH+10,-Math.PI/2+(r()-.5)*.6,60+r()*40,2,0);
+ return s;};
+
+/* --- سنابل --- */
+ARTS.wheat=function(c,seed){var r=rng(seed),s='';
+ for(var i=0;i<14;i++){var x=30+i*64+r()*20,top=30+r()*40,bend=(r()-.5)*40,op=f2(.3*fade(top));
+   s+='<path d="M'+f0(x)+' '+AH+'Q'+f0(x+bend)+' '+f0((AH+top)/2)+' '+f0(x+bend*1.4)+' '+f0(top)+'" stroke="'+c+'" stroke-width="1" fill="none" opacity="'+op+'"/>';
+   for(var k=0;k<7;k++){var t=k/7,px=x+bend*(.6+t*.8)*1.1,py=top+k*11;var side=k%2?1:-1;
+     s+='<ellipse cx="'+f0(px+side*5)+'" cy="'+f0(py)+'" rx="3.2" ry="6" transform="rotate('+(side*35)+' '+f0(px+side*5)+' '+f0(py)+')" stroke="'+c+'" stroke-width=".9" fill="'+c+'" fill-opacity=".08" opacity="'+op+'"/>';}}
+ return s;};
+
+/* --- نبض --- */
+ARTS.ecg=function(c,seed){var r=rng(seed),s='';
+ for(var line=0;line<2;line++){var y0=52+line*88,d='M0 '+y0,x=0,op=(.36-line*.14);
+   while(x<AW){x+=60+r()*100;d+=' L'+f0(x)+' '+y0;var a=12+r()*22;d+=' l5 -'+f0(a*.2)+' l4 '+f0(a*.28)+' l5 -'+f0(a)+' l6 '+f0(a*1.3)+' l5 -'+f0(a*.42)+' l8 '+f0(a*.12)+' l10 -'+f0(a*.16)+' l8 '+f0(a*.16);x+=51;}
+   s+='<path d="'+d+'" stroke="'+c+'" stroke-width="'+(1.3-line*.4)+'" fill="none" stroke-linejoin="round" opacity="'+op+'"/>';}
+ return s;};
+
+/* --- أسنان --- */
+ARTS.tooth=function(c,seed){var r=rng(seed),s='';
+ for(var i=0;i<16;i++){var x=40+r()*(AW-80),y=30+r()*(AH-70),sc=(.7+r()*.8),op=f2((.22+r()*.14)*fade(y));
+   s+='<g transform="translate('+f0(x)+' '+f0(y)+') scale('+sc.toFixed(2)+') rotate('+f0((r()-.5)*30)+')"><path d="M-12 -14c-5 0-8 5-7 10 1 4 3 8 4 14 .6 3 1 10 3.5 10 2.4 0 2-6 4-6h6c2 0 1.6 6 4 6 2.5 0 2.9-7 3.5-10 1-6 3-10 4-14 1-5-2-10-7-10-3 0-4.5 1.5-7.5 1.5S-9 -14 -12 -14Z" stroke="'+c+'" stroke-width="1.4" fill="none" opacity="'+op+'"/></g>';}
+ return s;};
+
+/* --- جزيئات --- */
+ARTS.molecule=function(c,seed){var r=rng(seed),s='',R=16;
+ for(var i=0;i<8;i++){var cx=60+r()*(AW-120),cy=40+r()*(AH-80),op=f2((.24+r()*.14)*fade(cy)),n=1+Math.floor(r()*3);
+   for(var m=0;m<n;m++){var hx=cx+m*R*1.73,hy=cy+(m%2?R*1.5:0),d='';
+     for(var k=0;k<6;k++){var a=Math.PI/3*k+Math.PI/6;d+=(k?' L':'M')+f0(hx+R*Math.cos(a))+' '+f0(hy+R*Math.sin(a));}
+     s+='<path d="'+d+' Z" stroke="'+c+'" stroke-width="1.1" fill="none" opacity="'+op+'"/>';
+     for(var k2=0;k2<6;k2+=2){var a2=Math.PI/3*k2+Math.PI/6;s+='<circle cx="'+f0(hx+R*Math.cos(a2))+'" cy="'+f0(hy+R*Math.sin(a2))+'" r="2.2" fill="'+c+'" opacity="'+op+'"/>';}}
+   s+='<path d="M'+f0(cx+R)+' '+f0(cy)+'l'+f0(R*1.4)+' -'+f0(R*.9)+'" stroke="'+c+'" stroke-width="1.1" opacity="'+op+'"/><circle cx="'+f0(cx+R*2.4)+'" cy="'+f0(cy-R*.9)+'" r="3" stroke="'+c+'" stroke-width="1" fill="none" opacity="'+op+'"/>';}
+ return s;};
+
+/* --- DNA --- */
+ARTS.dna=function(c,seed){var r=rng(seed),s='';
+ for(var h=0;h<2;h++){var y0=70+h*120,A=26,fr=.028,ph=r()*3;var d1='',d2='';
+   for(var x=0;x<=AW;x+=6){var y1=y0+Math.sin(x*fr+ph)*A,y2=y0+Math.sin(x*fr+ph+Math.PI)*A;d1+=(x?' L':'M')+x+' '+f0(y1);d2+=(x?' L':'M')+x+' '+f0(y2);
+     if(x%18===0){s+='<path d="M'+x+' '+f0(y1)+'L'+x+' '+f0(y2)+'" stroke="'+c+'" stroke-width=".8" opacity="'+f2(.22*fade(y0))+'"/>';}}
+   s+='<path d="'+d1+'" stroke="'+c+'" stroke-width="1.3" fill="none" opacity="'+f2(.34*fade(y0))+'"/><path d="'+d2+'" stroke="'+c+'" stroke-width="1.3" fill="none" opacity="'+f2(.22*fade(y0))+'"/>';}
+ return s;};
+
+/* --- رموز رياضية --- */
+ARTS.math=function(c,seed){var r=rng(seed),s='',SY=["∑","∫","π","√","∞","Δ","θ","λ","≈","∂","x²","dx","f(x)","σ","≤","Ω","eˣ","≠","μ","n!"];
+ for(var y=20;y<AH;y+=30){for(var x=0;x<AW;x+=40){if(r()<.42)continue;var fs=9+r()*13,op=.32*fade(y)*(.45+r()*.6);if(op<.03)continue;
+   s+='<text x="'+f0(x+r()*14)+'" y="'+f0(y+r()*10)+'" font-family="Poppins" font-size="'+fs.toFixed(1)+'" fill="'+c+'" opacity="'+f2(op)+'">'+SY[Math.floor(r()*SY.length)]+'</text>';}}
+ var d='';for(var xx=0;xx<=AW;xx+=8)d+=(xx?' L':'M')+xx+' '+f0(150+Math.sin(xx*.012)*40*Math.exp(-xx/900));s+='<path d="'+d+'" stroke="'+c+'" stroke-width="1" fill="none" opacity=".22"/>';
+ return s;};
+
+/* --- منشور وأشعة --- */
+ARTS.prism=function(c,seed){var r=rng(seed),s='';
+ for(var i=0;i<2;i++){var px=200+i*420+r()*60,py=60+i*60,R=40,op=f2(.36*fade(py));
+   s+='<path d="M'+f0(px)+' '+f0(py-R)+'L'+f0(px+R*.9)+' '+f0(py+R*.6)+'H'+f0(px-R*.9)+'Z" stroke="'+c+'" stroke-width="1.3" fill="'+c+'" fill-opacity=".05" opacity="'+op+'"/>';
+   s+='<path d="M'+f0(px-R*2.6)+' '+f0(py+R*.1)+'L'+f0(px-R*.45)+' '+f0(py)+'" stroke="'+c+'" stroke-width="1.2" opacity="'+op+'"/>';
+   for(var k=0;k<6;k++)s+='<path d="M'+f0(px+R*.55)+' '+f0(py+R*.1)+'L'+f0(px+R*3.2)+' '+f0(py-R*.5+k*R*.28)+'" stroke="'+c+'" stroke-width=".9" opacity="'+f2(.3-k*.03)+'"/>';}
+ for(var L=0;L<2;L++){var y0=200+L*40,d='';for(var x=0;x<=AW;x+=6)d+=(x?' L':'M')+x+' '+f0(y0+Math.sin(x*(.05+L*.03))*7);s+='<path d="'+d+'" stroke="'+c+'" stroke-width=".9" fill="none" opacity="'+f2(.2*fade(y0))+'"/>';}
+ return s;};
+
+/* --- خطوط كنتورية --- */
+ARTS.contour=function(c,seed){var r=rng(seed),s='';
+ for(var i=0;i<3;i++){var cx=150+i*300+r()*80,cy=60+r()*120,p1=r()*6,p2=r()*6;
+   for(var R=18;R<150;R+=17){var d='';for(var k=0;k<=48;k++){var a=k/48*Math.PI*2,rr=R*(1+.16*Math.sin(3*a+p1)+.1*Math.sin(5*a+p2)+.05*Math.sin(8*a));d+=(k?' L':'M')+f0(cx+rr*Math.cos(a))+' '+f0(cy+rr*Math.sin(a)*.75);}
+     s+='<path d="'+d+' Z" stroke="'+c+'" stroke-width="'+(R%51<17?1.2:.7)+'" fill="none" opacity="'+f2((.32-R/900)*fade(cy))+'"/>';}}
+ return s;};
+
+/* --- أعمدة كلاسيكية --- */
+ARTS.columns=function(c,seed){var r=rng(seed),s='',base=250;
+ s+='<path d="M0 '+base+'H'+AW+'" stroke="'+c+'" stroke-width="1.2" opacity=".3"/>';
+ for(var i=0;i<8;i++){var x=60+i*112+r()*30,h=110+r()*90,w=16,op=f2(.32*fade(base-h)),top=base-h;
+   s+='<rect x="'+f0(x-w*1.4)+'" y="'+f0(top)+'" width="'+f0(w*2.8)+'" height="7" '+'stroke="'+c+'" stroke-width="1" fill="none" opacity="'+op+'"/><rect x="'+f0(x-w*1.1)+'" y="'+f0(top+7)+'" width="'+f0(w*2.2)+'" height="6" stroke="'+c+'" stroke-width="1" fill="none" opacity="'+op+'"/>';
+   s+='<path d="M'+f0(x-w)+' '+f0(top+13)+'V'+f0(base-8)+'M'+f0(x+w)+' '+f0(top+13)+'V'+f0(base-8)+'M'+f0(x-w*.45)+' '+f0(top+13)+'V'+f0(base-8)+'M'+f0(x+w*.45)+' '+f0(top+13)+'V'+f0(base-8)+'" stroke="'+c+'" stroke-width="1" opacity="'+op+'"/>';
+   s+='<rect x="'+f0(x-w*1.3)+'" y="'+f0(base-8)+'" width="'+f0(w*2.6)+'" height="8" stroke="'+c+'" stroke-width="1" fill="none" opacity="'+op+'"/>';}
+ return s;};
+
+/* --- زخرفة هندسية إسلامية (نجوم ثمانية) --- */
+ARTS.arabesque=function(c,seed){var r=rng(seed),s='',T=64;
+ for(var row=0;row<5;row++){for(var col=0;col<15;col++){var cx=col*T+(row%2?T/2:0),cy=row*T+10,op=f2((.16+r()*.14)*fade(cy)),R=T*.42,d='';
+   for(var k=0;k<16;k++){var a=k*Math.PI/8,rr=k%2?R:R*.55;d+=(k?' L':'M')+f0(cx+rr*Math.cos(a))+' '+f0(cy+rr*Math.sin(a));}
+   s+='<path d="'+d+' Z" stroke="'+c+'" stroke-width=".9" fill="none" opacity="'+op+'"/><circle cx="'+f0(cx)+'" cy="'+f0(cy)+'" r="'+f0(R*.3)+'" stroke="'+c+'" stroke-width=".8" fill="none" opacity="'+op+'"/>';}}
+ return s;};
+
+/* --- حروف --- */
+function lettersGen(c,seed,L,font){var r=rng(seed),s='';
+ for(var y=18;y<AH;y+=23){for(var x=0;x<AW;x+=24){if(r()<.4)continue;var fs=9+r()*13,op=.36*fade(y)*(.45+r()*.6);if(op<.03)continue;
+   s+='<text x="'+f0(x+r()*8)+'" y="'+f0(y+r()*7)+'" font-family="'+font+'" font-size="'+fs.toFixed(1)+'" font-weight="'+(r()<.25?600:300)+'" fill="'+c+'" opacity="'+f2(op)+'">'+L[Math.floor(r()*L.length)]+'</text>';}}
+ return s;}
+ARTS.letters=function(c,seed){return lettersGen(c,seed,"ض ص ث ق ف غ ع ه خ ح ج د ش س ي ب ل ا ت ن م ك ط ذ ر و ز ظ".split(" "),"IBM Plex Sans Arabic");};
+ARTS.latin=function(c,seed){return lettersGen(c,seed,"A a B é ç Ş ğ E R T y u i o p W s d f g h j k l Z x c v b n m Q".split(" "),"Poppins");};
+ARTS.greek=function(c,seed){return lettersGen(c,seed,"α β γ δ ε ζ η θ λ μ ξ π ρ σ τ φ χ ψ ω Σ Φ Ω".split(" "),"Poppins");};
+
+/* --- شبكة أشخاص (اجتماعي/تربوي) --- */
+ARTS.network=function(c,seed){var r=rng(seed),pts=[],s='';
+ for(var y=24;y<AH;y+=52){for(var x=20;x<AW;x+=70){if(r()<.3)continue;pts.push([x+r()*30,y+r()*24]);}}
+ pts.forEach(function(p,i){for(var j=i+1;j<pts.length;j++){var q=pts[j],dx=q[0]-p[0],dy=q[1]-p[1];if(dx*dx+dy*dy<9000&&r()<.5)s+='<path d="M'+f0(p[0])+' '+f0(p[1])+'L'+f0(q[0])+' '+f0(q[1])+'" stroke="'+c+'" stroke-width=".8" opacity="'+f2(.18*fade(p[1]))+'"/>';}});
+ pts.forEach(function(p){var op=f2(.34*fade(p[1]));s+='<circle cx="'+f0(p[0])+'" cy="'+f0(p[1]-3)+'" r="3" stroke="'+c+'" stroke-width="1.1" fill="none" opacity="'+op+'"/><path d="M'+f0(p[0]-6)+' '+f0(p[1]+8)+'a6 6 0 0 1 12 0" stroke="'+c+'" stroke-width="1.1" fill="none" opacity="'+op+'"/>';});
+ return s;};
+
+/* --- ضربات فرشاة --- */
+ARTS.brush=function(c,seed){var r=rng(seed),s='';
+ for(var i=0;i<9;i++){var x0=r()*AW*.7,y0=20+r()*(AH-60),len=140+r()*260,op=f2((.16+r()*.16)*fade(y0));
+   for(var k=0;k<4;k++){var off=(k-1.5)*3.2;s+='<path d="M'+f0(x0)+' '+f0(y0+off)+'c'+f0(len*.3)+' '+f0(-20+r()*40)+' '+f0(len*.6)+' '+f0(20-r()*40)+' '+f0(len)+' '+f0((r()-.5)*30)+'" stroke="'+c+'" stroke-width="'+(2.6-Math.abs(k-1.5))+'" fill="none" stroke-linecap="round" opacity="'+op+'"/>';}}
+ return s;};
+
+/* --- مخططات مالية --- */
+ARTS.chart=function(c,seed){var r=rng(seed),s='';
+ for(var g=0;g<3;g++){var bx=40+g*300+r()*40,base=240;for(var k=0;k<7;k++){var h=30+r()*120,x=bx+k*24;s+='<rect x="'+f0(x)+'" y="'+f0(base-h)+'" width="14" height="'+f0(h)+'" rx="2" stroke="'+c+'" stroke-width="1" fill="'+c+'" fill-opacity=".05" opacity="'+f2(.3*fade(base-h))+'"/>';}
+   s+='<path d="M'+f0(bx-10)+' '+base+'H'+f0(bx+180)+'" stroke="'+c+'" stroke-width="1" opacity=".3"/>';}
+ var d='';for(var x=0;x<=AW;x+=45){var y=120-Math.sin(x*.01)*30-x*.05+(r()-.5)*20;d+=(x?' L':'M')+x+' '+f0(y);s+='<circle cx="'+x+'" cy="'+f0(y)+'" r="2.4" fill="'+c+'" opacity=".4"/>';}
+ s+='<path d="'+d+'" stroke="'+c+'" stroke-width="1.3" fill="none" opacity=".36"/>';
+ for(var i=0;i<6;i++){var cx=60+r()*(AW-120),cy=30+r()*80;s+='<circle cx="'+f0(cx)+'" cy="'+f0(cy)+'" r="9" stroke="'+c+'" stroke-width="1.1" fill="none" opacity=".26"/><circle cx="'+f0(cx)+'" cy="'+f0(cy)+'" r="5.5" stroke="'+c+'" stroke-width=".8" fill="none" opacity=".26"/>';}
+ return s;};
+
+/* --- ندف ثلج + موجة حرارة --- */
+ARTS.snow=function(c,seed){var r=rng(seed),s='';
+ for(var i=0;i<14;i++){var cx=30+r()*(AW-60),cy=20+r()*(AH-60),R=9+r()*16,op=f2((.24+r()*.14)*fade(cy)),d='';
+   for(var k=0;k<6;k++){var a=k*Math.PI/3,x2=cx+R*Math.cos(a),y2=cy+R*Math.sin(a);d+='M'+f0(cx)+' '+f0(cy)+'L'+f0(x2)+' '+f0(y2);
+     var bx=cx+R*.6*Math.cos(a),by=cy+R*.6*Math.sin(a);d+='M'+f0(bx)+' '+f0(by)+'L'+f0(bx+R*.3*Math.cos(a+.9))+' '+f0(by+R*.3*Math.sin(a+.9))+'M'+f0(bx)+' '+f0(by)+'L'+f0(bx+R*.3*Math.cos(a-.9))+' '+f0(by+R*.3*Math.sin(a-.9));}
+   s+='<path d="'+d+'" stroke="'+c+'" stroke-width="1" stroke-linecap="round" opacity="'+op+'"/>';}
+ var w='';for(var x=0;x<=AW;x+=6)w+=(x?' L':'M')+x+' '+f0(200+Math.sin(x*.03)*10);s+='<path d="'+w+'" stroke="'+c+'" stroke-width="1" fill="none" opacity=".2"/>';
+ return s;};
+
+/* --- نسيج متشابك --- */
+ARTS.weave=function(c,seed){var r=rng(seed),s='';
+ for(var i=-6;i<20;i++){var x0=i*54+r()*10,d='M'+f0(x0)+' 0';for(var y=0;y<=AH;y+=14)d+=' L'+f0(x0+y*.7+Math.sin(y*.12)*4)+' '+y;s+='<path d="'+d+'" stroke="'+c+'" stroke-width="1" fill="none" opacity=".2"/>';}
+ for(var j=-6;j<20;j++){var x1=j*54+r()*10,d2='M'+f0(x1)+' 0';for(var y2=0;y2<=AH;y2+=14)d2+=' L'+f0(x1-y2*.7+Math.sin(y2*.12+1)*4)+' '+y2;s+='<path d="'+d2+'" stroke="'+c+'" stroke-width="1" fill="none" opacity=".16"/>';}
+ for(var y3=20;y3<AH;y3+=40){var d3='M0 '+y3;for(var x3=0;x3<=AW;x3+=8)d3+=' L'+x3+' '+f0(y3+Math.sin(x3*.08)*3);s+='<path d="'+d3+'" stroke="'+c+'" stroke-width="1.2" fill="none" opacity="'+f2(.26*fade(y3))+'"/>';}
+ return s;};
+
+/* --- كوكبة (المواقف) --- */
+ARTS.stars=function(c,seed){var r=rng(seed),pts=[],s='';
+ for(var y=10;y<AH;y+=36){for(var x=0;x<AW;x+=46){if(r()<.32)continue;pts.push([x+r()*30,y+r()*24,.8+r()*1.4]);}}
+ pts.forEach(function(p,i){s+='<circle cx="'+f0(p[0])+'" cy="'+f0(p[1])+'" r="'+p[2].toFixed(1)+'" fill="'+c+'" opacity="'+f2(.2+r()*.3)+'"/>';
+   for(var j=i+1;j<pts.length;j++){var q=pts[j],dx=q[0]-p[0],dy=q[1]-p[1];if(dx*dx+dy*dy<4400&&r()<.5)s+='<path d="M'+f0(p[0])+' '+f0(p[1])+'L'+f0(q[0])+' '+f0(q[1])+'" stroke="'+c+'" stroke-width=".7" opacity=".16"/>';}});
+ return s;};
+
+function artSvg(kind,c,seed){var f=ARTS[kind]||ARTS.stars;return '<svg class="bgart" viewBox="0 0 900 280" preserveAspectRatio="xMidYMin slice" aria-hidden="true">'+f(c,seed)+'</svg>';}
+
+/* خريطة نقش كل فرع (بالاسم) */
+var BRANCH_ART={
+ "الطب البشري":"ecg","طب الأسنان":"tooth","الصيدلة":"molecule","الهندسة المعلوماتية":"binary","الهندسة المدنية":"bridge","الهندسة المعمارية":"plan",
+ "الهندسة الزراعية":"leaf","الحقوق":"columns","الشريعة":"arabesque","التمريض":"ecg","الفنون الجميلة التطبيقية":"brush","العلوم الصحية":"ecg",
+ "هندسة الاتصالات":"waves","هندسة الحواسيب":"chip","هندسة التحكم الآلي والأتمتة الصناعية":"pcb","الهندسة الإلكترونية":"pcb",
+ "هندسة نظم القدرة الكهربائية":"power","هندسة القيادة الكهربائية":"power","هندسة الميكاترونيك":"pcb",
+ "هندسة الطاقة الميكانيكية":"gears","هندسة الإنتاج":"gears","هندسة الطيران":"aero","الهندسة النووية":"atom","هندسة علم المواد الهندسية":"crystal",
+ "هندسة الآلات الزراعية":"wheat","الهندسة الصناعية":"gears","هندسة ميكانيك الغزل والنسيج":"weave",
+ "تقانات الهندسة البيئية":"leaf","تكنولوجيا الأغذية":"wheat","تقانات الهندسة الحيوية":"dna",
+ "الرياضيات":"math","الفيزياء":"prism","الكيمياء":"molecule","علم الحياة":"leaf","الجيولوجيا":"contour","الإحصاء الرياضي":"math",
+ "اللغة العربية وآدابها":"letters","اللغة الإنكليزية وآدابها":"latin","اللغة الفرنسية وآدابها":"latin","اللغة التركية وآدابها":"latin","اللغة الفارسية وآدابها":"letters",
+ "الفلسفة":"greek","علم الاجتماع":"network","الجغرافية":"contour","الآثار":"columns","التاريخ":"letters",
+ "الإرشاد النفسي":"network","معلم صف":"network","المناهج وطرائق التدريس":"network",
+ "المحاسبة":"chart","العلوم المالية والمصرفية":"chart","الاقتصاد والعلاقات الاقتصادية الدولية":"chart","إدارة الأعمال":"chart","الإحصاء ونظم المعلومات":"chart","التسويق":"chart",
+ "التقانات الإلكترونية":"pcb","التدفئة والتكييف والتبريد":"snow"
+};
+function branchArt(name,c){return artSvg(BRANCH_ART[name]||"stars",c,hashStr(name));}
+/* لون خلفية مختلف لكل موقف/سؤال */
+function qColor(i){return 'hsl('+((225+i*47)%360)+' 70% 72%)';}
+/* ===== رموز خلفيات الأسئلة (كل سؤال برمز من طبيعته) ===== */
+var MOTIF={
+ puzzle:'<path d="M4 8.5h3.4a2.1 2.1 0 1 1 4.2 0H15v3.4a2.1 2.1 0 1 1 0 4.2V19.5H11.6a2.1 2.1 0 1 0-4.2 0H4v-3.4a2.1 2.1 0 1 0 0-4.2V8.5Z"/>',
+ bulb:'<path d="M9.4 18.5h5.2M10 21h4M12 3.2a5.9 5.9 0 0 1 3.7 10.5c-.8.7-1.3 1.4-1.3 2.3h-4.8c0-.9-.5-1.6-1.3-2.3A5.9 5.9 0 0 1 12 3.2Z"/><path d="M10.6 10.4 12 12l1.4-1.6"/>',
+ rainbow:'<path d="M2.5 19a9.5 9.5 0 0 1 19 0"/><path d="M6 19a6 6 0 0 1 12 0"/><path d="M9.4 19a2.6 2.6 0 0 1 5.2 0"/>',
+ bits:'<path d="M3 7h3.4M8.6 7h2.8M13.6 7h6.6M3 11.4h6.6M11.8 11.4h2.8M17 11.4h4M3 15.8h3.4M8.6 15.8h6.6M17.2 15.8h3.8M3 20h5M10.2 20h3M15.4 20h5.6"/>',
+ magnifier:'<circle cx="10.4" cy="10.4" r="6"/><path d="m14.8 14.8 5.4 5.4M8 10.4h4.8"/>',
+ wrench:'<path d="M16.4 3.6a4.7 4.7 0 0 0-5.9 5.9L3.4 16.6a2 2 0 0 0 2.8 2.8l7.1-7.1a4.7 4.7 0 0 0 5.9-5.9l-2.8 2.8-2.6-.7-.7-2.6 2.8-2.8Z"/><circle cx="5.2" cy="18" r=".8"/>',
+ cog:'<circle cx="12" cy="12" r="3.4"/><path d="M12 4.6v2.8M12 16.6v2.8M4.6 12h2.8M16.6 12h2.8M6.8 6.8 8.8 8.8M15.2 15.2l2 2M6.8 17.2l2-2M15.2 8.8l2-2"/>',
+ screw:'<path d="M14.4 3.2 20.8 9.6l-2.2 2.2-1.8-1.8-6.6 6.6-3.6 1.4 1.4-3.6 6.6-6.6-1.8-1.8 2.2-2.2Z"/><path d="M11.4 9.6h3.4M9.8 11.2h3.4M8.2 12.8h3.4"/>',
+ mountain:'<path d="M2 19.5 8 9.5l3.6 4.6L14.6 10l7.4 9.5H2Z"/><circle cx="17.4" cy="5.8" r="2.4"/>',
+ crane:'<path d="M6.4 21V4.4M3.4 21h6M6.4 4.4h13.2M6.4 7.6l6-3.2M16.6 4.4v5.2m0 0-1.6 2.2h3.2l-1.6-2.2Z"/>',
+ blocks:'<path d="M3.4 14.2h6.2v6.2H3.4zM12.4 14.2h6.2v6.2h-6.2zM7.9 7.6h6.2v6.2H7.9z"/>',
+ pulse:'<path d="M2 12.5h4l2.2-5.4 3.2 10.6 2.6-7 1.6 1.8H22"/>',
+ pills:'<rect x="2.4" y="9.2" width="12" height="6" rx="3" transform="rotate(-32 8.4 12.2)"/><path d="m6.2 7.6 4.6 4.6"/><circle cx="17.4" cy="16.4" r="4.2"/><path d="M14.6 13.6 20.2 19.2"/>',
+ chat:'<path d="M2.6 5h11.2v7.2H8.2l-3.4 3.2v-3.2H2.6V5Z"/><path d="M16.6 9.4h4.8v6.2h-1.6v2.8L16.4 15.6h-3.6"/>',
+ board:'<rect x="2.8" y="3.6" width="18.4" height="11.6" rx="1.4"/><path d="M7 7.4h9M7 11h6M8 20.4l4-5.2 4 5.2"/>',
+ brush:'<path d="M16.8 2.8 21 7l-8.6 8.6-4.2 1.2 1.2-4.2L16.8 2.8Z"/><path d="M3.4 20.6c2.8-2.2 5.6-2.2 8.2 0"/>',
+ palette:'<path d="M12 3.2a8.8 8.8 0 1 0 .5 17.6c1.4 0 2-1 1.4-2.2-.7-1.3-.2-2.7 1.5-2.7h1.5a4.3 4.3 0 0 0 3.8-4.4C20.7 6.7 16.7 3.2 12 3.2Z"/><circle cx="8" cy="9" r=".9"/><circle cx="12.4" cy="7" r=".9"/><circle cx="16.4" cy="9.4" r=".9"/><circle cx="7.6" cy="13.4" r=".9"/>',
+ globe:'<circle cx="12" cy="12" r="8.6"/><path d="M3.4 12h17.2M12 3.4c-5.4 5-5.4 12.2 0 17.2M12 3.4c5.4 5 5.4 12.2 0 17.2"/>',
+ sprout:'<path d="M12 21v-7.8M12 13.2c0-4 2.5-6.5 7-6.5 0 4.5-2.5 6.7-7 6.5ZM12 13.2c0-3.2-2-5.2-5.6-5.2 0 3.6 2 5.4 5.6 5.2Z"/>',
+ team:'<circle cx="6.8" cy="7.8" r="2.6"/><circle cx="17.2" cy="7.8" r="2.6"/><circle cx="12" cy="16.4" r="2.6"/><path d="M9.4 8.4h5.2M8.2 10.2l2.4 3.6M15.8 10.2l-2.4 3.6"/>',
+ coins:'<ellipse cx="8.6" cy="6.8" rx="5.8" ry="2.5"/><path d="M2.8 6.8v4.2c0 1.4 2.6 2.5 5.8 2.5s5.8-1.1 5.8-2.5V6.8"/><ellipse cx="15.4" cy="16.4" rx="5.2" ry="2.2"/><path d="M10.2 16.4v3.4c0 1.2 2.3 2.2 5.2 2.2s5.2-1 5.2-2.2v-3.4"/>',
+ numbers:'<rect x="2.8" y="4.4" width="18.4" height="15.2" rx="1.4"/><path d="M2.8 9.6h18.4M2.8 14.6h18.4M9 4.4v15.2M15 4.4v15.2"/>',
+ scales:'<path d="M12 4v16m-4.2 0h8.4M5 8h14"/><path d="M7 8 4.5 13.6a2.6 2.6 0 0 0 5 0L7 8Zm10 0-2.5 5.6a2.6 2.6 0 0 0 5 0L17 8Z"/>',
+ quill:'<path d="M3.6 20.8c6.2-1 10.4-4.2 13.2-9.4l3.2-6.2-6.2 3.2c-5.2 3-8.4 7.2-9.4 13.2Z"/><path d="m7 17.4 4.4-4.4"/>',
+ rules:'<path d="M6 3.2h9l4 4v13.6H6V3.2Z"/><path d="M15 3.2v4h4M9 12.4h7M9 16.4h5"/>',
+ atom:'<circle cx="12" cy="12" r="1.7"/><ellipse cx="12" cy="12" rx="9" ry="3.6"/><ellipse cx="12" cy="12" rx="9" ry="3.6" transform="rotate(60 12 12)"/><ellipse cx="12" cy="12" rx="9" ry="3.6" transform="rotate(120 12 12)"/>',
+ hourglass:'<path d="M6 3.2h12M6 20.8h12M8 3.2v4l4 5 4-5v-4M8 20.8v-4l4-5 4 5v4"/>',
+ book:'<path d="M12 6.6C10.5 5.1 8.5 4.6 6 4.6c-1 0-2 .1-3 .4v14.2c1-.3 2-.4 3-.4 2.5 0 4.5.5 6 1.8 1.5-1.3 3.5-1.8 6-1.8 1 0 2 .1 3 .4V5c-1-.3-2-.4-3-.4-2.5 0-4.5.5-6 2Z"/><path d="M12 6.6v13.4"/>',
+ mind:'<path d="M15.4 21v-2.8c3-1.2 4.6-3.6 4.6-6.6A8 8 0 0 0 4 11.2c0 1.9.7 3.2 1.6 4.3.4.5.3 1.4-.6 1.5H4v2.2h3.4V21"/><circle cx="11" cy="10.6" r="2.4"/><path d="M13.4 10.6h2.4"/>',
+ city:'<path d="M2 20.8h20M4.4 20.8V8.8h5v12M11.4 20.8V4.6h5v16.2M18.4 20.8v-7.4H21v7.4"/><path d="M5.8 11.4h2M5.8 14.4h2M12.8 7.6h2M12.8 10.6h2M12.8 13.6h2"/>',
+ briefcase:'<rect x="2.8" y="6.8" width="18.4" height="13" rx="1.8"/><path d="M9 6.8V5a1.8 1.8 0 0 1 1.8-1.8h2.4A1.8 1.8 0 0 1 15 5v1.8M2.8 12h18.4M12 11v2.4"/>'
+};
+function motifArt(kind,c,seed){
+  var r=rng(seed), m=MOTIF[kind]||MOTIF.puzzle, s='', COLS=8, ROWS=3, cw=AW/COLS, ch=AH/ROWS;
+  for(var row=0;row<ROWS;row++){ for(var col=0;col<COLS;col++){
+    if(r()<.46) continue;
+    var cx=col*cw+cw*(.18+r()*.64), cy=row*ch+ch*(.18+r()*.64);
+    var sc=(.95+r()*1.15), rot=(r()-.5)*22, op=(.14+r()*.12);
+    if(op<.025) continue;
+    s+='<g transform="translate('+f0(cx)+' '+f0(cy)+') rotate('+f0(rot)+') scale('+sc.toFixed(2)+') translate(-12 -12)" stroke="'+c+'" stroke-width="1.25" fill="none" stroke-linecap="round" stroke-linejoin="round" vector-effect="non-scaling-stroke" opacity="'+f2(op)+'">'+m+'</g>';
+  }}
+  return s;
+}
+/* رمز لكل سؤال بحسب موضوعه */
+var QMAP_BARS=["puzzle","rainbow","bits","magnifier","wrench","bulb","mountain","crane","pulse","pills","chat","board","brush","palette","globe","sprout","team","coins","numbers","scales","quill","rules","atom","hourglass"];
+var QMAP_LIKERT=["puzzle","bulb","wrench","magnifier","bits","cog","mountain","crane","blocks","screw","chat","pulse","pills","board","team","globe","quill","brush","palette","sprout","briefcase","coins","numbers","scales","rules","hourglass","book","atom","mind","city"];
+function questionArt(i){
+  var map=(typeof QUESTIONS!=="undefined"&&QUESTIONS.length===24)?QMAP_BARS:QMAP_LIKERT;
+  return '<svg class="bgart" viewBox="0 0 900 280" preserveAspectRatio="xMidYMin slice" aria-hidden="true">'+motifArt(map[i]||"puzzle",qColor(i),1000+i*31)+'</svg>';
+}
+
 function brIcon(gk,c,sz){
   return '<svg viewBox="0 0 24 24" fill="none" width="'+sz+'" height="'+sz+'" style="filter:drop-shadow(0 0 6px '+c+'77)">'+
     '<g stroke="'+c+'" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" fill="none">'+GLYPHS[gk]+'</g></svg>';
@@ -754,7 +1086,7 @@ function buildStations(){
     for(var q=0;q<PER;q++){
       var qi=s*PER+q;
       var it=QUESTIONS[qi];
-      inner+='<div class="q" data-q="'+qi+'"><h3><em>'+(qi+1)+'</em>'+it.sc+'</h3><div class="opts">';
+      inner+='<div class="q" data-q="'+qi+'">'+questionArt(qi)+'<h3><em>'+(qi+1)+'</em>'+it.sc+'</h3><div class="opts">';
       for(var o=0;o<5;o++){
         var mid=(o%2===1), txt=mid?MIDL:it.a[o/2];
         inner+='<button type="button" class="opt'+(mid?' mid':'')+'" style="--c:'+LV[o]+'" data-q="'+qi+'" data-v="'+o+'">'+
@@ -906,7 +1238,7 @@ function cardHTML(m,rank,dims){
   } else {
     lines='<div class="hero-lines"><div class="hline"><b>بعد التخرج:</b><span>'+b.af+'</span></div></div>';
   }
-  return '<div class="oc'+(hero?' heroX':'')+' anim" style="--rc:'+c+';animation-delay:'+(rank*140)+'ms">'+
+  return '<div class="oc'+(hero?' heroX':'')+' anim" style="--rc:'+c+';animation-delay:'+(rank*140)+'ms">'+branchArt(b.n,c)+
    '<div class="head"><span class="rlab">'+RANKL[rank]+'</span>'+
     '<span class="gauge-slot">'+gaugeHTML(pct,c,b.g,hero?116:88)+'</span></div>'+
    '<span class="ghostn">'+(rank+1)+'</span>'+
