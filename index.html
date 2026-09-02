@@ -132,13 +132,17 @@ html[data-theme="light"] .st.done{color:#fff}
 .q.cur{border-color:rgba(91,192,248,.5);box-shadow:0 0 20px rgba(91,192,248,.12)}
 .q h3{font-size:1rem;font-weight:600;line-height:1.9;margin-bottom:12px;color:var(--ink)}
 .q h3 em{font-style:normal;color:var(--lbl);font-family:var(--f-display);font-size:.8rem;margin-inline-end:8px}
-.opts{display:flex;gap:8px}
-.opt{flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;
+.opts{display:flex;flex-direction:column;gap:7px}
+.opt{display:flex;align-items:center;gap:12px;text-align:right;width:100%;
   background:var(--surface2);border:1.5px solid var(--line);border-radius:12px;
-  padding:10px 4px 8px;transition:all .18s}
-.opt svg{width:26px;height:26px;transition:transform .2s}
-.opt .lb{font-size:.66rem;color:var(--muted);line-height:1.4;text-align:center}
-.opt:hover{border-color:var(--c);transform:translateY(-3px)}
+  padding:10px 12px;transition:all .18s}
+.opt .lv{flex:0 0 auto;display:flex}
+.opt svg{width:24px;height:24px;transition:transform .2s}
+.opt .lb{font-size:.86rem;color:var(--muted2);line-height:1.65;flex:1}
+.opt.mid{width:auto;margin:-2px 28px;padding:4px 12px;background:transparent;border-style:dashed;opacity:.85}
+.opt.mid svg{width:18px;height:18px}
+.opt.mid .lb{font-size:.72rem;color:var(--muted)}
+.opt:hover{border-color:var(--c);transform:translateX(-3px)}
 .opt.sel{border-color:var(--c);background:color-mix(in srgb,var(--c) 13%, transparent);
   box-shadow:0 0 14px color-mix(in srgb,var(--c) 30%, transparent)}
 .opt.sel svg{animation:popIn .35s ease}
@@ -232,10 +236,11 @@ footer{margin-top:30px;text-align:center;color:var(--muted);font-size:.74rem;lin
 @media (max-width:660px){
   header h1{font-size:.98rem}
   .toggle{margin-inline-start:0;margin-top:4px}
-  .opts{gap:5px}
-  .opt{padding:8px 2px 6px}
-  .opt svg{width:22px;height:22px}
-  .opt .lb{font-size:.56rem}
+  .opts{gap:6px}
+  .opt{padding:9px 10px;gap:9px}
+  .opt svg{width:20px;height:20px}
+  .opt .lb{font-size:.8rem}
+  .opt.mid{margin:-2px 14px}
   .subs{grid-template-columns:1fr}
   .legend{grid-template-columns:1fr}
   .tips-grid{grid-template-columns:1fr}
@@ -292,16 +297,16 @@ footer{margin-top:30px;text-align:center;color:var(--muted);font-size:.74rem;lin
       </svg>
     </span>
     <h2 class="anim" style="animation-delay:.2s">قبل أن تختار فرعك الجامعي…<br>تعرّف على نفسك</h2>
-    <p class="sub anim" style="animation-delay:.3s">رحلة قصيرة من 6 محطات تدرس شخصيتك وميولك، ثم ترشدك إلى الفروع الخمسة الأقرب إليك من بين فروع جامعة حلب — مع خطوات عملية لتتأكد من خيارك.</p>
+    <p class="sub anim" style="animation-delay:.3s">رحلة من 6 محطات و24 موقفاً من حياتك اليومية: في كل موقف تختار الجملة الأقرب إلى ما تفعله فعلاً، فترشدك البوصلة إلى الفروع الخمسة الأقرب إليك في جامعة حلب — مع خطوات عملية لتتأكد من خيارك.</p>
     <div class="feats anim" style="animation-delay:.4s">
-      <span class="feat"><b>6</b><span>دقائق تقريباً</span></span>
+      <span class="feat"><b>7</b><span>دقائق تقريباً</span></span>
       <span class="feat"><b>57</b><span>فرعاً جامعياً</span></span>
       <span class="feat"><b>5</b><span>اقتراحات مرتبة</span></span>
     </div>
     <button class="btn anim" style="animation-delay:.5s" id="startBtn">ابدأ الرحلة
       <svg width="17" height="17" viewBox="0 0 24 24" fill="none"><path d="M15 5v14L4 12l11-7Z" fill="currentColor"/></svg>
     </button>
-    <p class="note anim" style="animation-delay:.6s">لا توجد إجابة صحيحة وأخرى خاطئة — أجب بما يشبهك فعلاً، والنتيجة اقتراح استرشادي.</p>
+    <p class="note anim" style="animation-delay:.6s">لا توجد إجابة أفضل من أخرى — اختر ما تفعله فعلاً لا ما تتمنى أن تفعله، والنتيجة اقتراح استرشادي.</p>
   </div>
 
   <div id="stations"></div>
@@ -400,51 +405,53 @@ var FACETS=["F_AN","F_AP","F_FLD","F_CARE","F_LEAD","F_GLB","F_HER","F_DET","F_B
 var ALLD=CORE.concat(FACETS);
 
 /* =====================================================================
-   2) الأسئلة — 30 عبارة شخصية عامة (6 محطات × 5)
+   2) المواقف — 24 موقفاً سلوكياً BARS (6 محطات × 4): 3 مراسٍ نصية (0/2/4) + بينيتان (1/3)
    ===================================================================== */
 var QUESTIONS=[
- /* 1 — كيف يعمل عقلك؟ */
- {t:"أستمتع بالألغاز والمسائل التي تحتاج تفكيراً منطقياً طويلاً.", w:{SCI:.9,F_AN:.4}},
- {t:"أسأل دائماً «لماذا؟» ولا أرتاح حتى أفهم سبب حدوث الأشياء.", w:{SCI:.7,F_AN:.3,NAT:.1}},
- {t:"أفهم الأشياء بتجربتها بيدي أفضل من قراءة النظريات عنها.", w:{F_AP:.8,ENG:.35}},
- {t:"أنتبه للتفاصيل الصغيرة التي لا يلاحظها من حولي.", w:{F_DET:.85,SCI:.15}},
- {t:"التقنيات والتطبيقات الجديدة تثير حماسي وأجرّبها فور ظهورها.", w:{TECH:.9}},
- /* 2 — يدُك والميدان */
- {t:"أستمتع بفكّ الأشياء وتركيبها لأعرف ما بداخلها.", w:{ENG:.9,F_AP:.3}},
- {t:"أفضّل يوماً في الهواء الطلق والأرض والحقول على يوم كامل خلف مكتب.", w:{F_FLD:.85,NAT:.35}},
- {t:"يبهرني بناء الأشياء الضخمة: الأبراج والجسور والمدن وكيف تقوم.", w:{F_BLD:.8,ENG:.35}},
- {t:"أحب أن أرى نتيجة عملي شيئاً ملموساً أمامي في نهاية اليوم.", w:{F_AP:.6,ENG:.25,ART:.1}},
- {t:"أستطيع التركيز لساعات في عمل يدوي دقيق: تركيب، تشكيل، إصلاح.", w:{F_DET:.45,F_AP:.5,ART:.15}},
- /* 3 — أنت والآخرون */
- {t:"يرتاح الناس بالحديث معي ويشاركونني همومهم.", w:{SOC:.85,F_CARE:.3}},
- {t:"لا يزعجني منظر الدم، وأتصرف بهدوء في المواقف الطارئة.", w:{MED:.9}},
- {t:"أشعر أن لحياتي معنى أكبر حين أخفف ألم إنسان أو أعتني به.", w:{MED:.55,F_CARE:.7,SOC:.2}},
- {t:"أحب الوقوف أمام مجموعة لأشرح فكرة أو أعلّم شيئاً جديداً.", w:{SOC:.8,F_LEAD:.25}},
- {t:"في عمل الفريق أجدني غالباً من ينظّم ويوزّع الأدوار ويقود.", w:{F_LEAD:.85,BUS:.3}},
- /* 4 — ذوقك واهتماماتك */
- {t:"تجذبني اللغات الأجنبية وأستمتع بتقليد لفظها والتحدث بها.", w:{LANG:.8,F_GLB:.5}},
- {t:"أعتز بلغتنا العربية وتراثنا: نصوصه وشعره وحضارته.", w:{LANG:.65,F_HER:.7}},
- {t:"أعبّر عن نفسي بالرسم أو التصميم أو التصوير أفضل من الكلام.", w:{ART:.95}},
- {t:"ألاحظ التناسق والألوان في كل شيء حولي: غرفة، إعلان، مبنى.", w:{ART:.7,F_DET:.3}},
- {t:"أهتم بالنباتات أو الحيوانات وأستمتع برعايتها ومراقبتها.", w:{NAT:.9,F_CARE:.2}},
- /* 5 — طموحك ومستقبلك */
- {t:"أتخيل نفسي يوماً صاحبَ مشروع خاص أُديره بنفسي.", w:{BUS:.8,F_LEAD:.4}},
- {t:"أتابع الأسعار والأسواق، وأفهم بسرعة حسابات الربح والخسارة.", w:{BUS:.8,F_NUM:.4}},
- {t:"أستمتع بتنظيم الجداول والأرقام وضبطها بلا أي خطأ.", w:{F_NUM:.8,SCI:.15,F_DET:.3}},
- {t:"أدافع عن حقي وحقوق غيري بالحجة، ولا أسكت على الظلم.", w:{LAW:.9}},
- {t:"يستهويني فهم القواعد والأنظمة: لماذا يُسمح بهذا ويُمنع ذاك؟", w:{LAW:.7,F_AN:.2}},
- /* 6 — أسلوبك ونظرتك */
- {t:"أستطيع الالتزام بهدف يحتاج سنوات من الجهد المتواصل دون ملل.", w:{SCI:.1}, longY:true},
- {t:"أحب القراءة والكتابة وصياغة أفكاري بكلمات جميلة.", w:{LANG:.75,F_HER:.15}},
- {t:"تشدّني أخبار الاكتشافات العلمية والتقنية الجديدة حول العالم.", w:{SCI:.4,TECH:.4,F_GLB:.2}},
- {t:"أنجذب لفهم البشر: لماذا يتصرفون هكذا؟ وكيف يفكرون؟", w:{SOC:.6,F_AN:.25,F_CARE:.15}},
- {t:"أحلم بعمل يترك أثراً في مدينتي ويسهم في نهضتها من جديد.", w:{F_HER:.4,F_BLD:.3,SOC:.3}}
+ /* المحطة 1 — كيف يعمل عقلك؟ */
+ {sc:"حين تواجهك مسألة صعبة في الواجب…", a:["أتركها وأنتظر أن يحلها زميل أو المعلم في الحصة.","أحاول عدة مرات، ثم أطلب تلميحاً وأكمل الحل بنفسي.","أظل أجرّب طرقاً مختلفة حتى أحلها، ثم أبحث عن مسألة أصعب لأني أستمتع بذلك."], w:{SCI:.9,F_AN:.4}},
+ {sc:"حين ترى ظاهرة غريبة (قوس قزح، جهاز يتعطل فجأة)…", a:["أمرّ عليها دون أن تشغلني.","أتساءل عن سببها وأسأل من حولي.","أبحث عنها حتى أفهم آلية حدوثها بالتفصيل."], w:{SCI:.7,F_AN:.3,NAT:.1}},
+ {sc:"حين يصل إلى البيت جهاز أو تطبيق جديد…", a:["أنتظر أن يشرحه لي أحد وأستخدمه بالحد الأدنى.","أستكشفه بنفسي حتى أتقن استخدامه.","أفكك إعداداته وأجرّب حيله الخفية، وأصبح مرجع العائلة فيه."], w:{TECH:.9}},
+ {sc:"حين تسلّم عملاً (بحثاً، رسماً، جدولاً)…", a:["أسلّمه فور انتهائه دون مراجعة.","أراجعه مرة لأصلح الأخطاء الواضحة.","أراجعه أكثر من مرة وأدقق في أصغر التفاصيل حتى يخرج كاملاً."], w:{F_DET:.85,SCI:.15}},
+ /* المحطة 2 — يدُك والميدان */
+ {sc:"حين يتعطل جهاز في البيت…", a:["أبلّغ أحداً ولا أقترب منه.","أجرّب الحلول البسيطة قبل استدعاء المختص.","أفتحه وأتتبع العطل بنفسي، وأستمتع بمحاولة إصلاحه."], w:{ENG:.9,F_AP:.3}},
+ {sc:"طريقتك المفضلة لتعلّم شيء جديد…", a:["أقرأ عنه أو أشاهد شرحاً وأكتفي.","أقرأ عنه ثم أجرّبه مرة.","أجرّبه بيدي مباشرة وأتعلم من أخطائي حتى أتقنه."], w:{F_AP:.8,ENG:.3}},
+ {sc:"لو خُيّرت في نشاط نهاية الأسبوع…", a:["أبقى في البيت بأنشطة هادئة.","نزهة قصيرة ثم أعود.","يوم كامل في الطبيعة والحقول أو عمل ميداني في الهواء الطلق."], w:{F_FLD:.85,NAT:.35}},
+ {sc:"حين تمرّ بموقع بناء أو جسر ضخم…", a:["لا ألتفت إليه.","أنظر إليه باهتمام لحجمه.","أتوقف وأتأمل كيف صُمّم وكيف يحمل نفسه، وأودّ معرفة التفاصيل."], w:{F_BLD:.8,ENG:.35}},
+ /* المحطة 3 — أنت والآخرون */
+ {sc:"حين يُجرح أحد أمامك وينزف…", a:["أبتعد ولا أطيق النظر.","أنادي من يساعد وأبقى قريباً.","أتصرف بهدوء: أضغط على الجرح وأهدّئه حتى تصل المساعدة."], w:{MED:.9}},
+ {sc:"حين يمرض أحد أفراد أسرتك…", a:["أترك الأمر للكبار وأتابع يومي.","أسأل عنه وأساعد إن طُلب مني.","أتابع دواءه ومواعيده وأبقى بجانبه حتى يتعافى."], w:{MED:.55,F_CARE:.7,SOC:.2}},
+ {sc:"حين يأتيك صديق مهموم…", a:["لا أعرف ماذا أقول وأغيّر الموضوع.","أستمع إليه وأواسيه.","أستمع طويلاً وأساعده على ترتيب أفكاره حتى يجد حلاً — ويقصدني الآخرون لهذا."], w:{SOC:.85,F_CARE:.3}},
+ {sc:"حين يطلب زميل شرح درس لم يفهمه…", a:["أحيله إلى المعلم أو الكتاب.","أشرح له باختصار.","أشرحه بأمثلة وطرق مختلفة حتى يفهم، وأستمتع بذلك."], w:{SOC:.8,F_LEAD:.2}},
+ /* المحطة 4 — ذوقك واهتماماتك */
+ {sc:"حين تريد التعبير عن فكرة أو شعور…", a:["أقولها بكلمات مباشرة.","أضيف إليها صورة أو رسمة أحياناً.","أرسمها أو أصممها أو أصوّرها — الصورة لغتي الأولى."], w:{ART:.95}},
+ {sc:"حين تدخل غرفة أو ترى إعلاناً…", a:["لا أنتبه لشكله.","ألاحظ إن كان جميلاً أم لا.","أحلل الألوان والتناسق وأفكر فوراً كيف كنت سأحسّنه."], w:{ART:.7,F_DET:.3}},
+ {sc:"حين تسمع لغة أجنبية في فيلم أو من سائح…", a:["أنتظر الترجمة ولا أهتم.","أحاول التقاط كلمات أعرفها.","أقلّد اللفظ وأحفظ عبارات جديدة وأبحث عن فرصة للتحدث بها."], w:{LANG:.8,F_GLB:.5}},
+ {sc:"حين ترى نبتة ذابلة أو حيواناً جائعاً…", a:["لا يشغلني الأمر.","أساعد إن كان الأمر سهلاً.","أتولى رعايته وأتابعه أياماً حتى يتعافى، وأحب ذلك."], w:{NAT:.9,F_CARE:.2}},
+ /* المحطة 5 — طموحك ومستقبلك */
+ {sc:"في مشروع جماعي مدرسي…", a:["أنتظر أن يُقال لي ما أفعل.","أنفّذ الجزء المطلوب مني بإتقان.","أتولى التنظيم وتوزيع المهام ومتابعة الجميع."], w:{F_LEAD:.85,BUS:.3}},
+ {sc:"حين تحصل على مبلغ من المال…", a:["أصرفه فور وصوله.","أدخر جزءاً وأصرف الباقي.","أخطط له: ادخار، وربما استثمار صغير أو مشروع أفكر فيه منذ مدة."], w:{BUS:.8,F_NUM:.4,F_LEAD:.2}},
+ {sc:"حين تُعطى جدولاً طويلاً من الأرقام لتنظيمه…", a:["أشعر بالملل وأتركه لغيري.","أنجزه على مضض.","أستمتع بترتيبه واكتشاف الأنماط فيه وضبطه بلا خطأ."], w:{F_NUM:.8,SCI:.2,F_DET:.3}},
+ {sc:"حين ترى زميلاً يُظلم أمامك…", a:["أتجنب التدخل.","أواسيه بعد انتهاء الموقف.","أتدخل فوراً وأدافع عنه بالحجة أمام الجميع."], w:{LAW:.9,SOC:.15}},
+ /* المحطة 6 — أسلوبك ونظرتك */
+ {sc:"حين تقرأ نصاً عربياً قديماً أو قصيدة…", a:["أجدها ثقيلة وأتجاوزها.","أقرأها إن كانت مقررة عليّ.","أستمتع ببلاغتها وأبحث عن غيرها وأحفظ ما يعجبني."], w:{LANG:.7,F_HER:.65}},
+ {sc:"حين يوضع نظام جديد في المدرسة…", a:["أطبّقه دون أن أسأل.","أسأل عن سببه إن أزعجني.","أناقش منطقه ومدى عدالته، وأقترح تعديلاً إن وجدت ثغرة."], w:{LAW:.7,F_AN:.25}},
+ {sc:"حين تُعلن أخبار اكتشاف علمي أو تقني حول العالم…", a:["تمرّ عليّ دون اهتمام.","أقرأ العنوان وأكتفي.","أتابع التفاصيل وأناقشها مع أصدقائي."], w:{SCI:.4,TECH:.4,F_GLB:.2}},
+ {sc:"لو أن الفرع الذي تحبه يحتاج ست سنوات دراسة مكثفة…", a:["أبحث عن فرع أقصر.","أتردد، وقد أختاره إن لم أجد بديلاً.","أختاره دون تردد — سنوات الجهد لا تخيفني."], w:{SCI:.1}, longY:true}
 ];
 var ST_TITLES=["كيف يعمل عقلك؟","يدُك والميدان","أنت والآخرون","ذوقك واهتماماتك","طموحك ومستقبلك","أسلوبك ونظرتك"];
 
 /* مقياس الموافقة + أيقونات الإشارات المتدرجة */
 var AC=["#FF8FA3","#E8B33C","#97A1C6","#5BC0F8","#4ED8A8"];
 var ALB=["لا أوافق بشدة","لا أوافق","محايد","أوافق","أوافق بشدة"];
+var LV=["#97A1C6","#8FA0FF","#5BC0F8","#4ED8A8","#F2C664"];
+var MIDL="بين هذا وذاك";
+function levelIcon(i,c){
+  var s='<svg viewBox="0 0 24 24" fill="none" style="filter:drop-shadow(0 0 4px '+c+'66)">';
+  for(var k=0;k<5;k++){ var hgt=6+k*3, x=3+k*4;
+    s+='<rect x="'+x+'" y="'+(21-hgt)+'" width="2.6" height="'+hgt+'" rx="1.2" fill="'+(k<=i?c:'rgba(128,140,190,.28)')+'"/>'; }
+  return s+'</svg>';
+}
 function ansIcon(i,c){
   var s='<svg viewBox="0 0 24 24" fill="none" style="filter:drop-shadow(0 0 5px '+c+'77)">';
   var st='stroke="'+c+'" stroke-linecap="round" stroke-linejoin="round" fill="none"';
@@ -715,7 +722,7 @@ var BRANCHES=[
    5) محرك الرحلة
    ===================================================================== */
 var answers=new Array(QUESTIONS.length).fill(null);
-var curSt=0, N_ST=6, PER=5;
+var curSt=0, N_ST=6, PER=4;
 var stationsEl=document.getElementById("stations");
 var journeyEl=document.getElementById("journey");
 function el(h){var d=document.createElement("div");d.innerHTML=h.trim();return d.firstChild;}
@@ -743,12 +750,15 @@ function buildStations(){
   for(var s=0;s<N_ST;s++){
     var card=document.createElement("div");
     card.className="card station"; card.setAttribute("data-s",s);
-    var inner='<div class="st-head"><h2>المحطة '+(s+1)+' — '+ST_TITLES[s]+'</h2><span>حدد مدى موافقتك على كل عبارة</span></div>';
+    var inner='<div class="st-head"><h2>المحطة '+(s+1)+' — '+ST_TITLES[s]+'</h2><span>اختر الجملة الأقرب إلى ما تفعله فعلاً</span></div>';
     for(var q=0;q<PER;q++){
       var qi=s*PER+q;
-      inner+='<div class="q" data-q="'+qi+'"><h3><em>'+(qi+1)+'</em>'+QUESTIONS[qi].t+'</h3><div class="opts">';
+      var it=QUESTIONS[qi];
+      inner+='<div class="q" data-q="'+qi+'"><h3><em>'+(qi+1)+'</em>'+it.sc+'</h3><div class="opts">';
       for(var o=0;o<5;o++){
-        inner+='<button type="button" class="opt" style="--c:'+AC[o]+'" data-q="'+qi+'" data-v="'+o+'">'+ansIcon(o,AC[o])+'<span class="lb">'+ALB[o]+'</span></button>';
+        var mid=(o%2===1), txt=mid?MIDL:it.a[o/2];
+        inner+='<button type="button" class="opt'+(mid?' mid':'')+'" style="--c:'+LV[o]+'" data-q="'+qi+'" data-v="'+o+'">'+
+          '<span class="lv">'+levelIcon(o,LV[o])+'</span><span class="lb">'+txt+'</span></button>';
       }
       inner+='</div></div>';
     }
@@ -790,7 +800,7 @@ function refreshStation(s,answeredQi){
   });
   var nextBtn=card.querySelector('[data-act="next"]');
   nextBtn.disabled=missing.length>0;
-  card.querySelector("[data-hint]").textContent=missing.length?"بقي "+missing.length+" من 5":"أحسنت — المحطة مكتملة";
+  card.querySelector("[data-hint]").textContent=missing.length?"بقي "+missing.length+" من 4":"أحسنت — المحطة مكتملة";
   if(answeredQi!=null&&missing.length>0&&missing[0]>answeredQi){
     var nq=card.querySelector('.q[data-q="'+missing[0]+'"]');
     if(nq) setTimeout(function(){nq.scrollIntoView({behavior:"smooth",block:"center"});},260);
@@ -833,7 +843,7 @@ function computeDims(){
   return out;
 }
 function scoreBranches(dims){
-  var longY=answers[25]==null?2:answers[25];
+  var longY=answers[23]==null?2:answers[23];
   return BRANCHES.map(function(b){
     var num=0,den=0;
     Object.keys(b.w).forEach(function(d){num+=b.w[d]*dims[d];den+=b.w[d];});
@@ -1105,12 +1115,12 @@ document.getElementById("againBtn").addEventListener("click",function(){
   if(!m)return;
   if(m[1]==="start"){start();return;}
   var profiles={
-    tech:[4,3,2,3,4, 3,1,2,2,2, 1,1,1,2,2, 2,1,2,2,1, 2,2,3,1,1, 3,1,4,2,2],
-    med: [2,3,1,3,1, 1,1,1,1,2, 3,4,4,2,1, 1,2,1,1,2, 1,1,2,2,2, 4,1,2,3,3],
-    art: [1,2,3,3,2, 2,1,2,3,3, 2,1,2,2,1, 2,2,4,4,2, 2,1,1,1,1, 2,3,1,2,3],
-    bus: [2,1,1,2,2, 1,1,2,1,1, 2,0,1,3,4, 1,1,1,2,1, 4,4,3,2,2, 3,1,2,2,3],
-    lang:[1,1,1,2,1, 0,1,1,0,1, 2,0,1,3,1, 4,2,1,2,1, 1,1,1,1,1, 2,3,3,2,1],
-    her: [1,2,1,2,1, 1,2,1,1,1, 2,0,1,2,1, 1,4,1,2,2, 1,1,1,2,2, 2,4,1,2,4]
+    tech:[4,4,4,3, 3,4,2,3, 1,1,2,2, 1,2,2,1, 2,2,3,1, 1,2,4,3],
+    med: [3,3,1,3, 1,2,1,1, 4,4,3,3, 1,1,1,3, 2,1,2,3, 1,2,2,4],
+    art: [1,2,2,3, 2,3,2,3, 2,2,2,1, 4,4,2,2, 1,1,1,1, 2,1,2,2],
+    bus: [2,1,2,2, 1,2,1,1, 1,2,3,2, 1,1,1,1, 4,4,4,2, 1,2,2,3],
+    lang:[1,2,1,2, 0,1,1,0, 2,2,3,3, 1,2,4,1, 1,1,1,1, 2,2,3,2],
+    her: [1,2,1,2, 1,2,1,1, 2,2,2,2, 1,2,1,2, 1,1,1,3, 4,2,1,2]
   };
   answers=(profiles[m[1]]||profiles.tech).slice();
   finish();
