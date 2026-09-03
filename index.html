@@ -117,6 +117,9 @@ html[data-theme="light"] .btn{color:#fff}
 .st.done{background:linear-gradient(135deg,var(--brand),var(--accent));border-color:transparent;color:#050b3d}
 html[data-theme="light"] .st.done{color:#fff}
 .st.cur{border-color:var(--accent);color:var(--accent);animation:pulseRing 2s infinite}
+.st.adapt{border-style:dashed;border-color:var(--warn);color:var(--warn)}
+.st.adapt.cur{border-style:solid;border-color:var(--warn);box-shadow:0 0 0 0 rgba(232,179,60,.5)}
+.station.adapt .st-head h2{color:var(--warn)}
 .jln{flex:1;height:2px;background:var(--line);border-radius:99px;overflow:hidden}
 .jln i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--brand),var(--accent));transition:width .45s}
 .jln.done i{width:100%}
@@ -155,6 +158,7 @@ html[data-theme="light"] .st.done{color:#fff}
 .res-title{display:flex;align-items:center;gap:12px;margin-bottom:4px}
 .res-title h2{font-size:1.35rem}
 .res-sub{color:var(--muted2);font-size:.9rem;margin-bottom:20px}
+.res-sub .chip{display:inline-block;white-space:normal;line-height:1.7;margin-top:8px;padding:3px 12px}
 
 /* العداد المفتوح + الشارة */
 .gauge{position:relative;display:inline-flex;align-items:center;justify-content:center;flex:0 0 auto}
@@ -271,6 +275,79 @@ footer{margin-top:30px;text-align:center;color:var(--muted);font-size:.74rem;lin
   -webkit-mask-image:linear-gradient(180deg,#000 0,transparent 80%);mask-image:linear-gradient(180deg,#000 0,transparent 80%)}
 .q > :not(.bgart){position:relative;z-index:1}
 @media print{.bgart{display:none !important}}
+
+/* ====== وضوح الخلفيات في الوضع الفاتح + خلفيات النصائح ====== */
+html[data-theme="light"] .bgart{mix-blend-mode:multiply;filter:saturate(1.7) brightness(.68)}
+html[data-theme="light"] .q .bgart,html[data-theme="light"] .tip-col .bgart{filter:saturate(1.9) brightness(.5)}
+html[data-theme="light"] .oc .ghostn{-webkit-text-stroke:1.5px color-mix(in srgb,var(--rc) 60%,transparent)}
+html[data-theme="light"] .oc .head{background:linear-gradient(135deg,color-mix(in srgb,var(--rc) 30%,transparent),color-mix(in srgb,var(--rc) 8%,transparent))}
+.tip-col{position:relative;overflow:hidden}
+.tip-col .bgart{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:0;
+  -webkit-mask-image:linear-gradient(180deg,#000 0,transparent 88%);mask-image:linear-gradient(180deg,#000 0,transparent 88%)}
+.tip-col > :not(.bgart){position:relative;z-index:1}
+
+/* ====== المزلاج العمودي ====== */
+.vs{position:relative;display:grid;grid-template-columns:40px 1fr;column-gap:8px;row-gap:5px;align-items:center;margin-top:2px}
+.vs::before{content:"";position:absolute;top:16px;bottom:16px;right:19px;width:3px;border-radius:99px;background:linear-gradient(180deg,#97A1C6,#8FA0FF,#5BC0F8,#4ED8A8,#F2C664);opacity:.32}
+.vs .vfill{position:absolute;top:16px;right:19px;width:3px;height:0;border-radius:99px;background:linear-gradient(180deg,#97A1C6,#8FA0FF,#5BC0F8,#4ED8A8,#F2C664);box-shadow:0 0 8px rgba(91,192,248,.55);transition:height .35s ease}
+.vs .opt{display:contents}
+.vs .knob{width:40px;display:flex;justify-content:center;align-items:center;cursor:pointer;position:relative;z-index:1}
+.vs .knob i{display:flex;align-items:center;justify-content:center;border-radius:50%;background:var(--disc);border:2px solid var(--c);transition:all .2s}
+.vs .big .knob i{width:26px;height:26px}
+.vs .small .knob i{width:12px;height:12px;opacity:.85}
+.vs .knob svg{width:16px;height:16px}
+.vs .opt.sel .knob i{background:var(--c);box-shadow:0 0 14px var(--c);transform:scale(1.1)}
+.vs .opt.sel .knob svg circle{fill:#050b3d}
+.vs .lb{padding:9px 13px;border-radius:12px;border:1.5px solid var(--line);background:var(--surface2);font-size:.86rem;color:var(--muted2);line-height:1.65;text-align:right;cursor:pointer;transition:all .18s;display:block}
+.vs .small .lb{font-size:.72rem;color:var(--muted);padding:3px 13px;background:transparent;border-style:dashed;opacity:.9}
+.vs .opt:hover .lb{border-color:var(--c)}
+.vs .opt.sel .lb{border-color:var(--c);background:color-mix(in srgb,var(--c) 13%,transparent);color:var(--ink);font-weight:600;box-shadow:0 0 14px color-mix(in srgb,var(--c) 28%,transparent)}
+@media (max-width:660px){.vs .lb{font-size:.8rem}.vs .small .lb{font-size:.68rem}}
+
+/* ====== اللمعة العابرة (بطيئة) ====== */
+.oc::after,.q::after,.tip-col::after{content:"";position:absolute;inset:-40% -60%;pointer-events:none;z-index:3;
+  background:linear-gradient(115deg,transparent 43%,rgba(255,255,255,.12) 50%,transparent 57%);
+  transform:translateX(-130%);animation:sheen 16s ease-in-out infinite}
+html[data-theme="light"] .oc::after,html[data-theme="light"] .q::after,html[data-theme="light"] .tip-col::after{background:linear-gradient(115deg,transparent 43%,rgba(28,35,64,.07) 50%,transparent 57%)}
+.oc:nth-child(2)::after,.q:nth-child(3n)::after{animation-delay:-6s}.q:nth-child(3n+1)::after,.tip-col:nth-child(2)::after{animation-delay:-11s}.tip-col:nth-child(3)::after{animation-delay:-3s}
+@keyframes sheen{0%,72%{transform:translateX(-130%)}88%{transform:translateX(130%)}100%{transform:translateX(130%)}}
+
+/* ====== حركات النقوش من طبيعتها ====== */
+.bgart .band{animation:bfloat 10s ease-in-out infinite alternate}
+.bgart .bt{transition:opacity .9s ease}
+.bgart .bt.off{opacity:0 !important}
+@keyframes bfloat{from{transform:translateY(0)}to{transform:translateY(-6px)}}
+.bgart .drift{animation:drift var(--dd,20s) linear infinite}
+@keyframes drift{from{transform:translateX(0)}to{transform:translateX(var(--wl,140px))}}
+.bgart .wv{transform-box:fill-box;transform-origin:50% 100%;animation:ripple 6s ease-out infinite}
+@keyframes ripple{0%{opacity:.05;transform:scale(.85)}35%{opacity:.4}100%{opacity:.05;transform:scale(1.12)}}
+.bgart .gear{animation:spin var(--sd,40s) linear infinite}
+.bgart .gear.ccw{animation-direction:reverse}
+@keyframes spin{to{transform:rotate(360deg)}}
+.bgart .flow{stroke-dasharray:14 12;animation:flow 6s linear infinite}
+@keyframes flow{to{stroke-dashoffset:-52}}
+.bgart .orb{animation:spin var(--sd,60s) linear infinite}
+.bgart .sway{animation:sway var(--sd,7s) ease-in-out infinite alternate}
+@keyframes sway{from{transform:rotate(-2.2deg)}to{transform:rotate(2.2deg)}}
+.bgart .fall{animation:fall var(--sd,18s) linear infinite}
+@keyframes fall{0%{transform:translateY(-30px) rotate(0);opacity:0}12%{opacity:1}100%{transform:translateY(90px) rotate(60deg);opacity:0}}
+.bgart .lt{transition:opacity .8s ease}
+.bgart .lt.off{opacity:0 !important}
+.bgart .breath{animation:breath var(--sd,14s) ease-in-out infinite alternate}
+@keyframes breath{from{transform:scale(1)}to{transform:scale(1.04)}}
+.bgart .mo{transform-box:fill-box;transform-origin:center}
+.bgart .mo.float{animation:mfloat var(--sd,8s) ease-in-out infinite alternate}
+@keyframes mfloat{from{transform:translate(0,0)}to{transform:translate(3px,-7px)}}
+.bgart .mo.spin{animation:spin var(--sd,50s) linear infinite}
+.bgart .mo.pulse{animation:mpulse var(--sd,3.2s) ease-in-out infinite}
+@keyframes mpulse{0%,100%{transform:scale(1)}50%{transform:scale(1.12)}}
+.bgart .mo.flicker{animation:flick var(--sd,5s) ease-in-out infinite}
+@keyframes flick{0%,100%{opacity:1}45%{opacity:.35}55%{opacity:1}70%{opacity:.6}}
+.bgart .mo.sway{animation:sway var(--sd,6s) ease-in-out infinite alternate;transform-origin:50% 100%}
+.bgart .mo.bob{animation:bob var(--sd,7s) ease-in-out infinite}
+@keyframes bob{0%,100%{transform:translateY(0) rotate(0)}50%{transform:translateY(-5px) rotate(4deg)}}
+@media (prefers-reduced-motion: reduce){.oc::after,.q::after,.tip-col::after,.bgart *{animation:none !important}}
+@media print{.oc::after,.q::after,.tip-col::after{display:none}}
 </style>
 </head>
 <body>
@@ -307,7 +384,7 @@ footer{margin-top:30px;text-align:center;color:var(--muted);font-size:.74rem;lin
       </svg>
     </span>
     <h2 class="anim" style="animation-delay:.2s">قبل أن تختار فرعك الجامعي…<br>تعرّف على نفسك</h2>
-    <p class="sub anim" style="animation-delay:.3s">رحلة من 6 محطات و24 موقفاً من حياتك اليومية: في كل موقف تختار الجملة الأقرب إلى ما تفعله فعلاً، فترشدك البوصلة إلى الفروع الخمسة الأقرب إليك في جامعة حلب — مع خطوات عملية لتتأكد من خيارك.</p>
+    <p class="sub anim" style="animation-delay:.3s">رحلة من 6 محطات و24 موقفاً من حياتك اليومية: في كل موقف تختار الجملة الأقرب إلى ما تفعله فعلاً — وقد تظهر لك محطة سابعة حاسمة حين تتقارب فروع متشابهة في مقدمة نتيجتك — فترشدك البوصلة إلى الفروع الخمسة الأقرب إليك في جامعة حلب، مع خطوات عملية لتتأكد من خيارك.</p>
     <div class="feats anim" style="animation-delay:.4s">
       <span class="feat"><b>7</b><span>دقائق تقريباً</span></span>
       <span class="feat"><b>57</b><span>فرعاً جامعياً</span></span>
@@ -552,64 +629,63 @@ var ARTS={};
 
 /* --- أصفار وواحدات --- */
 ARTS.binary=function(c,seed){var r=rng(seed),s='';
- for(var y=14;y<AH;y+=16){for(var x=0;x<AW;x+=13){if(r()<.34)continue;var fs=6.5+r()*7,op=.34*fade(y)*(.45+r()*.6);if(op<.03)continue;
-   s+='<text x="'+f0(x+r()*6)+'" y="'+f0(y+r()*5)+'" font-family="Poppins" font-size="'+fs.toFixed(1)+'" font-weight="'+(r()<.2?700:500)+'" fill="'+c+'" opacity="'+f2(op)+'">'+(r()<.5?'0':'1')+'</text>';}}
+ for(var y=14;y<AH;y+=16){s+='<g class="band" style="animation-delay:-'+(r()*10).toFixed(1)+'s;animation-duration:'+(8+r()*6).toFixed(1)+'s">';for(var x=0;x<AW;x+=13){if(r()<.34)continue;var fs=6.5+r()*7,op=.34*fade(y)*(.45+r()*.6);if(op<.03)continue;
+   s+='<text class="bt" x="'+f0(x+r()*6)+'" y="'+f0(y+r()*5)+'" font-family="Poppins" font-size="'+fs.toFixed(1)+'" font-weight="'+(r()<.2?700:500)+'" fill="'+c+'" opacity="'+f2(op)+'">'+(r()<.5?'0':'1')+'</text>';}s+='</g>';}
  return s;};
-
 /* --- لوحة PCB (مسارات متوازية بانحناءات 45° + فتحات + رقاقات) --- */
-function pcbGen(c,seed,chips,buses){var r=rng(seed),s='',P=18;
+function pcbGen(c,seed,chips,buses){var r=rng(seed),s='',P=18,pid='p'+seed+'_';
  function via(x,y,op){return '<circle cx="'+f0(x)+'" cy="'+f0(y)+'" r="3.2" stroke="'+c+'" stroke-width="1.4" fill="none" opacity="'+op+'"/><circle cx="'+f0(x)+'" cy="'+f0(y)+'" r="1.1" fill="'+c+'" opacity="'+op+'"/>';}
+ var parts='';
  for(var b=0;b<buses;b++){var y=P*(1+Math.floor(r()*13)),x=-20+Math.floor(r()*3)*P,n=1+Math.floor(r()*3),dir=r()<.5?1:-1,segs=[[x,y]],px=x,py=y;
    while(px<AW+20){px+=P*(2+Math.floor(r()*6));segs.push([px,py]);
      if(r()<.6){var j=P*(1+Math.floor(r()*2));if(py+dir*j<P||py+dir*j>AH-P)dir=-dir;px+=j;py+=dir*j;segs.push([px,py]);if(r()<.4)dir=-dir;}}
    var op=f2((.22+r()*.16)*fade(y));
-   for(var k=0;k<n;k++){var off=k*6-(n-1)*3,d='';segs.forEach(function(p,i){d+=(i?' L':'M')+p[0]+' '+(p[1]+off);});
-     s+='<path d="'+d+'" stroke="'+c+'" stroke-width="1.1" fill="none" stroke-linejoin="round" opacity="'+op+'"/>'+via(segs[0][0],segs[0][1]+off,op);}}
+   for(var k=0;k<n;k++){var off=k*6-(n-1)*3,d='';segs.forEach(function(p,i){d+=(i?' L':'M')+p[0]+' '+(p[1]+off);});var id=pid+b+'_'+k;
+     s+='<path id="'+id+'" d="'+d+'" stroke="'+c+'" stroke-width="1.1" fill="none" stroke-linejoin="round" opacity="'+op+'"/>'+via(segs[0][0],segs[0][1]+off,op);
+     if(k===0){var dur=(7+r()*8).toFixed(1),beg=(-r()*8).toFixed(1);
+       parts+='<circle r="2.4" fill="'+c+'" opacity=".95" style="filter:drop-shadow(0 0 4px '+c+')"><animateMotion dur="'+dur+'s" begin="'+beg+'s" repeatCount="indefinite"><mpath href="#'+id+'"/></animateMotion></circle>';}}}
  for(var i=0;i<chips;i++){var cx=60+r()*(AW-160),cy=P*(2+Math.floor(r()*9)),w=44+r()*30,h=26+r()*14,op2=f2((.28+r()*.1)*fade(cy));
    s+='<rect x="'+f0(cx)+'" y="'+f0(cy)+'" width="'+f0(w)+'" height="'+f0(h)+'" rx="2" stroke="'+c+'" stroke-width="1.2" fill="none" opacity="'+op2+'"/><circle cx="'+f0(cx+6)+'" cy="'+f0(cy+6)+'" r="1.6" fill="'+c+'" opacity="'+op2+'"/>';
    var pins=Math.floor(w/9);for(var t=0;t<pins;t++){var xx=f0(cx+5+t*((w-10)/(pins-1)));s+='<path d="M'+xx+' '+f0(cy)+'v-6M'+xx+' '+f0(cy+h)+'v6" stroke="'+c+'" stroke-width="1.2" opacity="'+op2+'"/>';}}
  for(var v=0;v<26;v++){var vx=P*Math.floor(r()*(AW/P)),vy=P*(1+Math.floor(r()*(AH/P-1)));s+=via(vx,vy,f2((.2+r()*.15)*fade(vy)));}
- return s;}
+ return s+parts;}
 ARTS.pcb=function(c,seed){return pcbGen(c,seed,5,9);};
 ARTS.chip=function(c,seed){return pcbGen(c,seed,10,5);};
 
 /* --- أمواج اتصالات --- */
 ARTS.waves=function(c,seed){var r=rng(seed),s='';
- for(var i=0;i<4;i++){var cx=100+r()*(AW-200),cy=20+r()*60;
-   for(var R=18;R<170;R+=22){var op=f2((.3-R/700)*fade(cy));s+='<path d="M'+f0(cx-R)+' '+f0(cy)+'a'+R+' '+R+' 0 0 1 '+(2*R)+' 0" stroke="'+c+'" stroke-width="'+(R<60?1.2:.8)+'" fill="none" opacity="'+op+'"/>';}
+ for(var i=0;i<4;i++){var cx=100+r()*(AW-200),cy=20+r()*60,k=0;
+   for(var R=18;R<170;R+=22,k++){var op=f2((.3-R/700)*fade(cy));s+='<path class="wv" style="animation-delay:'+(-k*.75-r()).toFixed(2)+'s" d="M'+f0(cx-R)+' '+f0(cy)+'a'+R+' '+R+' 0 0 1 '+(2*R)+' 0" stroke="'+c+'" stroke-width="'+(R<60?1.2:.8)+'" fill="none" opacity="'+op+'"/>';}
    s+='<circle cx="'+f0(cx)+'" cy="'+f0(cy)+'" r="3" fill="'+c+'" opacity=".45"/><path d="M'+f0(cx)+' '+f0(cy)+'v22" stroke="'+c+'" stroke-width="1.4" opacity=".4"/>';}
- for(var L=0;L<2;L++){var y0=150+L*70,d='M0 '+y0,A=8+L*6,fr=.045+L*.02;for(var x=0;x<=AW;x+=6)d+=' L'+x+' '+f0(y0+Math.sin(x*fr)*A*(1+.4*Math.sin(x*.01)));s+='<path d="'+d+'" stroke="'+c+'" stroke-width="1" fill="none" opacity="'+f2(.3*fade(y0))+'"/>';}
+ for(var L=0;L<2;L++){var y0=150+L*70,A=8+L*6,fr=.045+L*.02,wl=2*Math.PI/fr,d='M'+f0(-wl)+' '+y0;for(var x=-wl;x<=AW;x+=6)d+=' L'+f0(x)+' '+f0(y0+Math.sin(x*fr)*A*(1+.4*Math.sin(x*.01)));
+   s+='<g class="drift" style="--wl:'+f0(wl)+'px;--dd:'+(22+L*8)+'s"><path d="'+d+'" stroke="'+c+'" stroke-width="1" fill="none" opacity="'+f2(.3*fade(y0))+'"/></g>';}
  return s;};
-
 /* --- قدرة كهربائية: ثلاث أطوار + أبراج --- */
-ARTS.power=function(c,seed){var r=rng(seed),s='';
- for(var ph=0;ph<3;ph++){var d='';for(var x=0;x<=AW;x+=6){var y=70+Math.sin(x*.022+ph*2.09)*26;d+=(x?' L':'M')+x+' '+f0(y);}s+='<path d="'+d+'" stroke="'+c+'" stroke-width="1.1" fill="none" opacity="'+f2(.26-ph*.05)+'"/>';}
+ARTS.power=function(c,seed){var r=rng(seed),s='',wl=2*Math.PI/.022;
+ for(var ph=0;ph<3;ph++){var d='';for(var x=-wl;x<=AW;x+=6){var y=70+Math.sin(x*.022+ph*2.09)*26;d+=(x===-wl?'M':' L')+f0(x)+' '+f0(y);}s+='<g class="drift" style="--wl:'+f0(wl)+'px;--dd:'+(26+ph*4)+'s"><path d="'+d+'" stroke="'+c+'" stroke-width="1.1" fill="none" opacity="'+f2(.26-ph*.05)+'"/></g>';}
  for(var t=0;t<4;t++){var bx=90+t*230+r()*60,by=250,h=120+r()*40,w=26;var op=f2(.3*fade(by-h));
    s+='<path d="M'+f0(bx-w)+' '+by+'L'+f0(bx-6)+' '+f0(by-h)+'h12L'+f0(bx+w)+' '+by+'" stroke="'+c+'" stroke-width="1.2" fill="none" opacity="'+op+'"/>';
    for(var k=1;k<5;k++){var yy=by-h*k/5,ww=w*(1-k/5)+6;s+='<path d="M'+f0(bx-ww)+' '+f0(yy)+'h'+f0(2*ww)+'M'+f0(bx-ww)+' '+f0(yy)+'L'+f0(bx+ww*(1-1/k*.5))+' '+f0(yy-h/5)+'" stroke="'+c+'" stroke-width=".8" opacity="'+op+'"/>';}
    s+='<path d="M'+f0(bx-38)+' '+f0(by-h*.55)+'h76M'+f0(bx-30)+' '+f0(by-h*.75)+'h60" stroke="'+c+'" stroke-width="1.2" opacity="'+op+'"/>';}
  return s;};
-
 /* --- تروس --- */
 ARTS.gears=function(c,seed){var r=rng(seed),s='';
  for(var i=0;i<9;i++){var cx=40+r()*(AW-80),cy=30+r()*(AH-60),R=14+r()*28,n=Math.max(8,Math.round(R/2.6)),d='',op=f2((.22+r()*.16)*fade(cy));
    for(var k=0;k<n*2;k++){var a=k*Math.PI/n,rr=k%2?R:R*.8;var a2=a+Math.PI/n*.45;d+=(k?' L':'M')+f0(cx+rr*Math.cos(a))+' '+f0(cy+rr*Math.sin(a))+' L'+f0(cx+rr*Math.cos(a2))+' '+f0(cy+rr*Math.sin(a2));}
-   s+='<path d="'+d+' Z" stroke="'+c+'" stroke-width="1.1" fill="none" stroke-linejoin="round" opacity="'+op+'"/><circle cx="'+f0(cx)+'" cy="'+f0(cy)+'" r="'+f0(R*.45)+'" stroke="'+c+'" stroke-width="1" fill="none" opacity="'+op+'"/><circle cx="'+f0(cx)+'" cy="'+f0(cy)+'" r="'+f0(R*.12)+'" fill="'+c+'" opacity="'+op+'"/>';}
+   s+='<g class="gear'+(i%2?' ccw':'')+'" style="transform-origin:'+f0(cx)+'px '+f0(cy)+'px;--sd:'+f0(R*1.6)+'s"><path d="'+d+' Z" stroke="'+c+'" stroke-width="1.1" fill="none" stroke-linejoin="round" opacity="'+op+'"/><circle cx="'+f0(cx)+'" cy="'+f0(cy)+'" r="'+f0(R*.45)+'" stroke="'+c+'" stroke-width="1" fill="none" opacity="'+op+'"/><circle cx="'+f0(cx)+'" cy="'+f0(cy)+'" r="'+f0(R*.12)+'" fill="'+c+'" opacity="'+op+'"/></g>';}
  return s;};
-
 /* --- طيران: خطوط انسيابية + مقطع جناح --- */
 ARTS.aero=function(c,seed){var r=rng(seed),s='';
- for(var i=0;i<12;i++){var y0=12+i*22+r()*8,d='M0 '+f0(y0);for(var x=0;x<=AW;x+=30){var yy=y0+Math.sin((x+i*40)*.012)*(6+i*.6);d+=' Q'+f0(x+15)+' '+f0(yy+3)+' '+f0(x+30)+' '+f0(yy);}s+='<path d="'+d+'" stroke="'+c+'" stroke-width=".9" fill="none" opacity="'+f2(.28*fade(y0))+'"/>';}
+ for(var i=0;i<12;i++){var y0=12+i*22+r()*8,d='M0 '+f0(y0);for(var x=0;x<=AW;x+=30){var yy=y0+Math.sin((x+i*40)*.012)*(6+i*.6);d+=' Q'+f0(x+15)+' '+f0(yy+3)+' '+f0(x+30)+' '+f0(yy);}s+='<path class="flow" style="animation-delay:-'+(r()*6).toFixed(1)+'s;animation-duration:'+(5+r()*4).toFixed(1)+'s" d="'+d+'" stroke="'+c+'" stroke-width=".9" fill="none" opacity="'+f2(.28*fade(y0))+'"/>';}
  for(var a=0;a<2;a++){var ax=180+a*420+r()*80,ay=70+a*90,L=150+r()*60;s+='<path d="M'+f0(ax)+' '+f0(ay)+'c'+f0(L*.25)+' -'+f0(L*.12)+' '+f0(L*.7)+' -'+f0(L*.1)+' '+f0(L)+' 0c-'+f0(L*.3)+' '+f0(L*.06)+' -'+f0(L*.7)+' '+f0(L*.04)+' -'+f0(L)+' 0Z" stroke="'+c+'" stroke-width="1.3" fill="'+c+'" fill-opacity=".06" opacity="'+f2(.4*fade(ay))+'"/>';}
  return s;};
-
 /* --- ذرة --- */
 ARTS.atom=function(c,seed){var r=rng(seed),s='';
  for(var i=0;i<5;i++){var cx=70+r()*(AW-140),cy=40+r()*(AH-90),R=26+r()*40,op=f2((.24+r()*.14)*fade(cy));
+   s+='<g class="orb" style="transform-origin:'+f0(cx)+'px '+f0(cy)+'px;--sd:'+f0(40+R)+'s">';
    for(var k=0;k<3;k++)s+='<ellipse cx="'+f0(cx)+'" cy="'+f0(cy)+'" rx="'+f0(R)+'" ry="'+f0(R*.38)+'" transform="rotate('+(k*60+r()*20)+' '+f0(cx)+' '+f0(cy)+')" stroke="'+c+'" stroke-width="1" fill="none" opacity="'+op+'"/>';
-   s+='<circle cx="'+f0(cx)+'" cy="'+f0(cy)+'" r="3" fill="'+c+'" opacity="'+op+'"/><circle cx="'+f0(cx+R*.7)+'" cy="'+f0(cy-R*.12)+'" r="2" fill="'+c+'" opacity="'+op+'"/>';}
+   s+='<circle cx="'+f0(cx)+'" cy="'+f0(cy)+'" r="3" fill="'+c+'" opacity="'+op+'"/><circle cx="'+f0(cx+R*.7)+'" cy="'+f0(cy-R*.12)+'" r="2" fill="'+c+'" opacity="'+op+'"/></g>';}
  return s;};
-
 /* --- شبكة بلورية سداسية --- */
 ARTS.crystal=function(c,seed){var r=rng(seed),s='',R=22,h=R*Math.sqrt(3)/2;
  for(var row=0;row<9;row++){for(var col=-1;col<24;col++){if(r()<.3)continue;var cx=col*R*3+(row%2?R*1.5:0),cy=20+row*h,op=f2((.16+r()*.16)*fade(cy)),d='';
@@ -650,24 +726,23 @@ ARTS.leaf=function(c,seed){var r=rng(seed),s='';
  function branch(x,y,a,len,w,d){if(d>4||len<8)return;var x2=x+Math.cos(a)*len,y2=y+Math.sin(a)*len;
    s+='<path d="M'+f0(x)+' '+f0(y)+'Q'+f0((x+x2)/2+Math.cos(a+1.57)*len*.15)+' '+f0((y+y2)/2+Math.sin(a+1.57)*len*.15)+' '+f0(x2)+' '+f0(y2)+'" stroke="'+c+'" stroke-width="'+w.toFixed(1)+'" fill="none" stroke-linecap="round" opacity="'+f2(.32*fade(Math.min(y,y2)))+'"/>';
    var n=2+(r()<.4?1:0);for(var i=0;i<n;i++)branch(x2,y2,a+(r()-.5)*1.3,len*(.6+r()*.2),w*.7,d+1);}
- for(var i=0;i<7;i++)branch(60+i*130+r()*40,AH+10,-Math.PI/2+(r()-.5)*.6,60+r()*40,2,0);
+ for(var i=0;i<7;i++){var bx=60+i*130+r()*40;s+='<g class="sway" style="transform-origin:'+f0(bx)+'px '+(AH+10)+'px;--sd:'+(7+r()*4).toFixed(1)+'s;animation-delay:-'+(r()*7).toFixed(1)+'s">';branch(bx,AH+10,-Math.PI/2+(r()-.5)*.6,60+r()*40,2,0);s+='</g>';}
  return s;};
-
 /* --- سنابل --- */
 ARTS.wheat=function(c,seed){var r=rng(seed),s='';
  for(var i=0;i<14;i++){var x=30+i*64+r()*20,top=30+r()*40,bend=(r()-.5)*40,op=f2(.3*fade(top));
-   s+='<path d="M'+f0(x)+' '+AH+'Q'+f0(x+bend)+' '+f0((AH+top)/2)+' '+f0(x+bend*1.4)+' '+f0(top)+'" stroke="'+c+'" stroke-width="1" fill="none" opacity="'+op+'"/>';
+   s+='<g class="sway" style="transform-origin:'+f0(x)+'px '+AH+'px;--sd:'+(6+r()*4).toFixed(1)+'s;animation-delay:-'+(r()*6).toFixed(1)+'s"><path d="M'+f0(x)+' '+AH+'Q'+f0(x+bend)+' '+f0((AH+top)/2)+' '+f0(x+bend*1.4)+' '+f0(top)+'" stroke="'+c+'" stroke-width="1" fill="none" opacity="'+op+'"/>';
    for(var k=0;k<7;k++){var t=k/7,px=x+bend*(.6+t*.8)*1.1,py=top+k*11;var side=k%2?1:-1;
-     s+='<ellipse cx="'+f0(px+side*5)+'" cy="'+f0(py)+'" rx="3.2" ry="6" transform="rotate('+(side*35)+' '+f0(px+side*5)+' '+f0(py)+')" stroke="'+c+'" stroke-width=".9" fill="'+c+'" fill-opacity=".08" opacity="'+op+'"/>';}}
+     s+='<ellipse cx="'+f0(px+side*5)+'" cy="'+f0(py)+'" rx="3.2" ry="6" transform="rotate('+(side*35)+' '+f0(px+side*5)+' '+f0(py)+')" stroke="'+c+'" stroke-width=".9" fill="'+c+'" fill-opacity=".08" opacity="'+op+'"/>';}
+   s+='</g>';}
  return s;};
-
 /* --- نبض --- */
-ARTS.ecg=function(c,seed){var r=rng(seed),s='';
- for(var line=0;line<2;line++){var y0=52+line*88,d='M0 '+y0,x=0,op=(.36-line*.14);
+ARTS.ecg=function(c,seed){var r=rng(seed),s='',parts='';
+ for(var line=0;line<2;line++){var y0=52+line*88,d='M0 '+y0,x=0,op=(.36-line*.14),id='e'+seed+'_'+line;
    while(x<AW){x+=60+r()*100;d+=' L'+f0(x)+' '+y0;var a=12+r()*22;d+=' l5 -'+f0(a*.2)+' l4 '+f0(a*.28)+' l5 -'+f0(a)+' l6 '+f0(a*1.3)+' l5 -'+f0(a*.42)+' l8 '+f0(a*.12)+' l10 -'+f0(a*.16)+' l8 '+f0(a*.16);x+=51;}
-   s+='<path d="'+d+'" stroke="'+c+'" stroke-width="'+(1.3-line*.4)+'" fill="none" stroke-linejoin="round" opacity="'+op+'"/>';}
- return s;};
-
+   s+='<path id="'+id+'" d="'+d+'" stroke="'+c+'" stroke-width="'+(1.3-line*.4)+'" fill="none" stroke-linejoin="round" opacity="'+op+'"/>';
+   parts+='<circle r="2.6" fill="'+c+'" style="filter:drop-shadow(0 0 5px '+c+')"><animateMotion dur="'+(9+line*3)+'s" begin="'+(-line*4)+'s" repeatCount="indefinite"><mpath href="#'+id+'"/></animateMotion></circle>';}
+ return s+parts;};
 /* --- أسنان --- */
 ARTS.tooth=function(c,seed){var r=rng(seed),s='';
  for(var i=0;i<16;i++){var x=40+r()*(AW-80),y=30+r()*(AH-70),sc=(.7+r()*.8),op=f2((.22+r()*.14)*fade(y));
@@ -686,19 +761,17 @@ ARTS.molecule=function(c,seed){var r=rng(seed),s='',R=16;
 
 /* --- DNA --- */
 ARTS.dna=function(c,seed){var r=rng(seed),s='';
- for(var h=0;h<2;h++){var y0=70+h*120,A=26,fr=.028,ph=r()*3;var d1='',d2='';
-   for(var x=0;x<=AW;x+=6){var y1=y0+Math.sin(x*fr+ph)*A,y2=y0+Math.sin(x*fr+ph+Math.PI)*A;d1+=(x?' L':'M')+x+' '+f0(y1);d2+=(x?' L':'M')+x+' '+f0(y2);
-     if(x%18===0){s+='<path d="M'+x+' '+f0(y1)+'L'+x+' '+f0(y2)+'" stroke="'+c+'" stroke-width=".8" opacity="'+f2(.22*fade(y0))+'"/>';}}
-   s+='<path d="'+d1+'" stroke="'+c+'" stroke-width="1.3" fill="none" opacity="'+f2(.34*fade(y0))+'"/><path d="'+d2+'" stroke="'+c+'" stroke-width="1.3" fill="none" opacity="'+f2(.22*fade(y0))+'"/>';}
+ for(var h=0;h<2;h++){var y0=70+h*120,A=26,fr=.028,ph=r()*3,wl=2*Math.PI/fr,d1='',d2='',rungs='';
+   for(var x=-wl;x<=AW;x+=6){var y1=y0+Math.sin(x*fr+ph)*A,y2=y0+Math.sin(x*fr+ph+Math.PI)*A;d1+=(x===-wl?'M':' L')+f0(x)+' '+f0(y1);d2+=(x===-wl?'M':' L')+f0(x)+' '+f0(y2);
+     if(Math.round(x)%18===0)rungs+='<path d="M'+f0(x)+' '+f0(y1)+'L'+f0(x)+' '+f0(y2)+'" stroke="'+c+'" stroke-width=".8" opacity="'+f2(.22*fade(y0))+'"/>';}
+   s+='<g class="drift" style="--wl:'+f0(wl)+'px;--dd:'+(34+h*10)+'s">'+rungs+'<path d="'+d1+'" stroke="'+c+'" stroke-width="1.3" fill="none" opacity="'+f2(.34*fade(y0))+'"/><path d="'+d2+'" stroke="'+c+'" stroke-width="1.3" fill="none" opacity="'+f2(.22*fade(y0))+'"/></g>';}
  return s;};
-
 /* --- رموز رياضية --- */
 ARTS.math=function(c,seed){var r=rng(seed),s='',SY=["∑","∫","π","√","∞","Δ","θ","λ","≈","∂","x²","dx","f(x)","σ","≤","Ω","eˣ","≠","μ","n!"];
- for(var y=20;y<AH;y+=30){for(var x=0;x<AW;x+=40){if(r()<.42)continue;var fs=9+r()*13,op=.32*fade(y)*(.45+r()*.6);if(op<.03)continue;
-   s+='<text x="'+f0(x+r()*14)+'" y="'+f0(y+r()*10)+'" font-family="Poppins" font-size="'+fs.toFixed(1)+'" fill="'+c+'" opacity="'+f2(op)+'">'+SY[Math.floor(r()*SY.length)]+'</text>';}}
- var d='';for(var xx=0;xx<=AW;xx+=8)d+=(xx?' L':'M')+xx+' '+f0(150+Math.sin(xx*.012)*40*Math.exp(-xx/900));s+='<path d="'+d+'" stroke="'+c+'" stroke-width="1" fill="none" opacity=".22"/>';
+ for(var y=20;y<AH;y+=30){s+='<g class="band" style="animation-delay:-'+(r()*11).toFixed(1)+'s">';for(var x=0;x<AW;x+=40){if(r()<.42)continue;var fs=9+r()*13,op=.32*fade(y)*(.45+r()*.6);if(op<.03)continue;
+   s+='<text class="lt" data-set="'+SY.join('|')+'" x="'+f0(x+r()*14)+'" y="'+f0(y+r()*10)+'" font-family="Poppins" font-size="'+fs.toFixed(1)+'" fill="'+c+'" opacity="'+f2(op)+'">'+SY[Math.floor(r()*SY.length)]+'</text>';}s+='</g>';}
+ var d='';for(var xx=0;xx<=AW;xx+=8)d+=(xx?' L':'M')+xx+' '+f0(150+Math.sin(xx*.012)*40*Math.exp(-xx/900));s+='<path class="flow" style="animation-duration:14s" d="'+d+'" stroke="'+c+'" stroke-width="1" fill="none" opacity=".22"/>';
  return s;};
-
 /* --- منشور وأشعة --- */
 ARTS.prism=function(c,seed){var r=rng(seed),s='';
  for(var i=0;i<2;i++){var px=200+i*420+r()*60,py=60+i*60,R=40,op=f2(.36*fade(py));
@@ -711,10 +784,11 @@ ARTS.prism=function(c,seed){var r=rng(seed),s='';
 /* --- خطوط كنتورية --- */
 ARTS.contour=function(c,seed){var r=rng(seed),s='';
  for(var i=0;i<3;i++){var cx=150+i*300+r()*80,cy=60+r()*120,p1=r()*6,p2=r()*6;
+   s+='<g class="breath" style="transform-origin:'+f0(cx)+'px '+f0(cy)+'px;--sd:'+(12+i*3)+'s;animation-delay:-'+(i*5)+'s">';
    for(var R=18;R<150;R+=17){var d='';for(var k=0;k<=48;k++){var a=k/48*Math.PI*2,rr=R*(1+.16*Math.sin(3*a+p1)+.1*Math.sin(5*a+p2)+.05*Math.sin(8*a));d+=(k?' L':'M')+f0(cx+rr*Math.cos(a))+' '+f0(cy+rr*Math.sin(a)*.75);}
-     s+='<path d="'+d+' Z" stroke="'+c+'" stroke-width="'+(R%51<17?1.2:.7)+'" fill="none" opacity="'+f2((.32-R/900)*fade(cy))+'"/>';}}
+     s+='<path d="'+d+' Z" stroke="'+c+'" stroke-width="'+(R%51<17?1.2:.7)+'" fill="none" opacity="'+f2((.32-R/900)*fade(cy))+'"/>';}
+   s+='</g>';}
  return s;};
-
 /* --- أعمدة كلاسيكية --- */
 ARTS.columns=function(c,seed){var r=rng(seed),s='',base=250;
  s+='<path d="M0 '+base+'H'+AW+'" stroke="'+c+'" stroke-width="1.2" opacity=".3"/>';
@@ -733,8 +807,8 @@ ARTS.arabesque=function(c,seed){var r=rng(seed),s='',T=64;
 
 /* --- حروف --- */
 function lettersGen(c,seed,L,font){var r=rng(seed),s='';
- for(var y=18;y<AH;y+=23){for(var x=0;x<AW;x+=24){if(r()<.4)continue;var fs=9+r()*13,op=.36*fade(y)*(.45+r()*.6);if(op<.03)continue;
-   s+='<text x="'+f0(x+r()*8)+'" y="'+f0(y+r()*7)+'" font-family="'+font+'" font-size="'+fs.toFixed(1)+'" font-weight="'+(r()<.25?600:300)+'" fill="'+c+'" opacity="'+f2(op)+'">'+L[Math.floor(r()*L.length)]+'</text>';}}
+ for(var y=18;y<AH;y+=23){s+='<g class="band" style="animation-delay:-'+(r()*11).toFixed(1)+'s">';for(var x=0;x<AW;x+=24){if(r()<.4)continue;var fs=9+r()*13,op=.36*fade(y)*(.45+r()*.6);if(op<.03)continue;
+   s+='<text class="lt" data-set="'+L.join('')+'" x="'+f0(x+r()*8)+'" y="'+f0(y+r()*7)+'" font-family="'+font+'" font-size="'+fs.toFixed(1)+'" font-weight="'+(r()<.25?600:300)+'" fill="'+c+'" opacity="'+f2(op)+'">'+L[Math.floor(r()*L.length)]+'</text>';}s+='</g>';}
  return s;}
 ARTS.letters=function(c,seed){return lettersGen(c,seed,"ض ص ث ق ف غ ع ه خ ح ج د ش س ي ب ل ا ت ن م ك ط ذ ر و ز ظ".split(" "),"IBM Plex Sans Arabic");};
 ARTS.latin=function(c,seed){return lettersGen(c,seed,"A a B é ç Ş ğ E R T y u i o p W s d f g h j k l Z x c v b n m Q".split(" "),"Poppins");};
@@ -767,10 +841,9 @@ ARTS.snow=function(c,seed){var r=rng(seed),s='';
  for(var i=0;i<14;i++){var cx=30+r()*(AW-60),cy=20+r()*(AH-60),R=9+r()*16,op=f2((.24+r()*.14)*fade(cy)),d='';
    for(var k=0;k<6;k++){var a=k*Math.PI/3,x2=cx+R*Math.cos(a),y2=cy+R*Math.sin(a);d+='M'+f0(cx)+' '+f0(cy)+'L'+f0(x2)+' '+f0(y2);
      var bx=cx+R*.6*Math.cos(a),by=cy+R*.6*Math.sin(a);d+='M'+f0(bx)+' '+f0(by)+'L'+f0(bx+R*.3*Math.cos(a+.9))+' '+f0(by+R*.3*Math.sin(a+.9))+'M'+f0(bx)+' '+f0(by)+'L'+f0(bx+R*.3*Math.cos(a-.9))+' '+f0(by+R*.3*Math.sin(a-.9));}
-   s+='<path d="'+d+'" stroke="'+c+'" stroke-width="1" stroke-linecap="round" opacity="'+op+'"/>';}
+   s+='<g class="fall" style="transform-origin:'+f0(cx)+'px '+f0(cy)+'px;--sd:'+(16+r()*12).toFixed(1)+'s;animation-delay:-'+(r()*20).toFixed(1)+'s"><path d="'+d+'" stroke="'+c+'" stroke-width="1" stroke-linecap="round" opacity="'+op+'"/></g>';}
  var w='';for(var x=0;x<=AW;x+=6)w+=(x?' L':'M')+x+' '+f0(200+Math.sin(x*.03)*10);s+='<path d="'+w+'" stroke="'+c+'" stroke-width="1" fill="none" opacity=".2"/>';
  return s;};
-
 /* --- نسيج متشابك --- */
 ARTS.weave=function(c,seed){var r=rng(seed),s='';
  for(var i=-6;i<20;i++){var x0=i*54+r()*10,d='M'+f0(x0)+' 0';for(var y=0;y<=AH;y+=14)d+=' L'+f0(x0+y*.7+Math.sin(y*.12)*4)+' '+y;s+='<path d="'+d+'" stroke="'+c+'" stroke-width="1" fill="none" opacity=".2"/>';}
@@ -807,15 +880,17 @@ function branchArt(name,c){return artSvg(BRANCH_ART[name]||"stars",c,hashStr(nam
 /* لون خلفية مختلف لكل موقف/سؤال */
 function qColor(i){return 'hsl('+((225+i*47)%360)+' 70% 72%)';}
 /* ===== رموز خلفيات الأسئلة (كل سؤال برمز من طبيعته) ===== */
+/* ===== مكتبة رموز خلفيات الأسئلة (طقم متنوع لكل سؤال) ===== */
+var MOTION_OF={cog:"spin",compass:"spin",atom:"spin",sun:"spin",globe:"spin",planet:"spin",gear:"spin",heart:"pulse",pulse:"pulse",stetho:"pulse",bulb:"flicker",sparkle:"flicker",star:"flicker",lightning:"flicker",star8:"flicker",sprout:"sway",leaf:"sway",tree:"sway",wheat:"sway",flag:"sway",plane:"bob",rocket:"bob",paw:"bob",cloud:"float",rainbow:"float"};
 var MOTIF={
  puzzle:'<path d="M4 8.5h3.4a2.1 2.1 0 1 1 4.2 0H15v3.4a2.1 2.1 0 1 1 0 4.2V19.5H11.6a2.1 2.1 0 1 0-4.2 0H4v-3.4a2.1 2.1 0 1 0 0-4.2V8.5Z"/>',
- bulb:'<path d="M9.4 18.5h5.2M10 21h4M12 3.2a5.9 5.9 0 0 1 3.7 10.5c-.8.7-1.3 1.4-1.3 2.3h-4.8c0-.9-.5-1.6-1.3-2.3A5.9 5.9 0 0 1 12 3.2Z"/><path d="M10.6 10.4 12 12l1.4-1.6"/>',
+ bulb:'<path d="M9.4 18.5h5.2M10 21h4M12 3.2a5.9 5.9 0 0 1 3.7 10.5c-.8.7-1.3 1.4-1.3 2.3h-4.8c0-.9-.5-1.6-1.3-2.3A5.9 5.9 0 0 1 12 3.2Z"/>',
  rainbow:'<path d="M2.5 19a9.5 9.5 0 0 1 19 0"/><path d="M6 19a6 6 0 0 1 12 0"/><path d="M9.4 19a2.6 2.6 0 0 1 5.2 0"/>',
  bits:'<path d="M3 7h3.4M8.6 7h2.8M13.6 7h6.6M3 11.4h6.6M11.8 11.4h2.8M17 11.4h4M3 15.8h3.4M8.6 15.8h6.6M17.2 15.8h3.8M3 20h5M10.2 20h3M15.4 20h5.6"/>',
  magnifier:'<circle cx="10.4" cy="10.4" r="6"/><path d="m14.8 14.8 5.4 5.4M8 10.4h4.8"/>',
- wrench:'<path d="M16.4 3.6a4.7 4.7 0 0 0-5.9 5.9L3.4 16.6a2 2 0 0 0 2.8 2.8l7.1-7.1a4.7 4.7 0 0 0 5.9-5.9l-2.8 2.8-2.6-.7-.7-2.6 2.8-2.8Z"/><circle cx="5.2" cy="18" r=".8"/>',
+ wrench:'<path d="M16.4 3.6a4.7 4.7 0 0 0-5.9 5.9L3.4 16.6a2 2 0 0 0 2.8 2.8l7.1-7.1a4.7 4.7 0 0 0 5.9-5.9l-2.8 2.8-2.6-.7-.7-2.6 2.8-2.8Z"/>',
  cog:'<circle cx="12" cy="12" r="3.4"/><path d="M12 4.6v2.8M12 16.6v2.8M4.6 12h2.8M16.6 12h2.8M6.8 6.8 8.8 8.8M15.2 15.2l2 2M6.8 17.2l2-2M15.2 8.8l2-2"/>',
- screw:'<path d="M14.4 3.2 20.8 9.6l-2.2 2.2-1.8-1.8-6.6 6.6-3.6 1.4 1.4-3.6 6.6-6.6-1.8-1.8 2.2-2.2Z"/><path d="M11.4 9.6h3.4M9.8 11.2h3.4M8.2 12.8h3.4"/>',
+ screw:'<path d="M14.4 3.2 20.8 9.6l-2.2 2.2-1.8-1.8-6.6 6.6-3.6 1.4 1.4-3.6 6.6-6.6-1.8-1.8 2.2-2.2Z"/><path d="M11.4 9.6h3.4M9.8 11.2h3.4"/>',
  mountain:'<path d="M2 19.5 8 9.5l3.6 4.6L14.6 10l7.4 9.5H2Z"/><circle cx="17.4" cy="5.8" r="2.4"/>',
  crane:'<path d="M6.4 21V4.4M3.4 21h6M6.4 4.4h13.2M6.4 7.6l6-3.2M16.6 4.4v5.2m0 0-1.6 2.2h3.2l-1.6-2.2Z"/>',
  blocks:'<path d="M3.4 14.2h6.2v6.2H3.4zM12.4 14.2h6.2v6.2h-6.2zM7.9 7.6h6.2v6.2H7.9z"/>',
@@ -838,27 +913,110 @@ var MOTIF={
  book:'<path d="M12 6.6C10.5 5.1 8.5 4.6 6 4.6c-1 0-2 .1-3 .4v14.2c1-.3 2-.4 3-.4 2.5 0 4.5.5 6 1.8 1.5-1.3 3.5-1.8 6-1.8 1 0 2 .1 3 .4V5c-1-.3-2-.4-3-.4-2.5 0-4.5.5-6 2Z"/><path d="M12 6.6v13.4"/>',
  mind:'<path d="M15.4 21v-2.8c3-1.2 4.6-3.6 4.6-6.6A8 8 0 0 0 4 11.2c0 1.9.7 3.2 1.6 4.3.4.5.3 1.4-.6 1.5H4v2.2h3.4V21"/><circle cx="11" cy="10.6" r="2.4"/><path d="M13.4 10.6h2.4"/>',
  city:'<path d="M2 20.8h20M4.4 20.8V8.8h5v12M11.4 20.8V4.6h5v16.2M18.4 20.8v-7.4H21v7.4"/><path d="M5.8 11.4h2M5.8 14.4h2M12.8 7.6h2M12.8 10.6h2M12.8 13.6h2"/>',
- briefcase:'<rect x="2.8" y="6.8" width="18.4" height="13" rx="1.8"/><path d="M9 6.8V5a1.8 1.8 0 0 1 1.8-1.8h2.4A1.8 1.8 0 0 1 15 5v1.8M2.8 12h18.4M12 11v2.4"/>'
+ briefcase:'<rect x="2.8" y="6.8" width="18.4" height="13" rx="1.8"/><path d="M9 6.8V5a1.8 1.8 0 0 1 1.8-1.8h2.4A1.8 1.8 0 0 1 15 5v1.8M2.8 12h18.4M12 11v2.4"/>',
+ sigma:'<path d="M17 5.5V4H6.5l5.5 8-5.5 8H17v-1.5"/>',
+ qmark:'<path d="M9 9.2a3 3 0 1 1 4.4 2.6c-.9.5-1.4 1.2-1.4 2.2v.6"/><circle cx="12" cy="18.2" r=".9" fill="__C__"/>',
+ compass:'<circle cx="12" cy="12" r="8.6"/><path d="m15.5 8.5-2.2 5.2-5 2.3 2.2-5.2 5-2.3Z"/>',
+ cloud:'<path d="M7 18h10a4 4 0 0 0 .6-7.9A5.5 5.5 0 0 0 7 11a3.5 3.5 0 0 0 0 7Z"/>',
+ sun:'<circle cx="12" cy="12" r="4"/><path d="M12 3v2.4M12 18.6V21M3 12h2.4M18.6 12H21M5.6 5.6l1.7 1.7M16.7 16.7l1.7 1.7M5.6 18.4l1.7-1.7M16.7 7.3l1.7-1.7"/>',
+ lightning:'<path d="M13.2 2.6 6 13.4h4.6L9.4 21.4l7.6-11.4h-4.8l1-7.4Z"/>',
+ plug:'<path d="M9 3v4M15 3v4M6.5 7h11v4a5.5 5.5 0 0 1-11 0V7ZM12 16.5V21"/>',
+ phone:'<rect x="7" y="2.6" width="10" height="18.8" rx="2.2"/><path d="M10.5 18.4h3"/>',
+ laptop:'<rect x="4" y="5" width="16" height="10.5" rx="1.6"/><path d="M2.4 19h19.2M9 19l.6-3.5h4.8L15 19"/>',
+ sparkle:'<path d="M12 3.5 13.9 9.6 20 11.5l-6.1 1.9L12 19.5l-1.9-6.1L4 11.5l6.1-1.9L12 3.5Z"/>',
+ check:'<circle cx="12" cy="12" r="8.6"/><path d="m8 12.4 2.7 2.7L16.2 9.6"/>',
+ pencil:'<path d="m4 20 1.2-4.6L16.4 4.2a1.8 1.8 0 0 1 2.6 0l.8.8a1.8 1.8 0 0 1 0 2.6L8.6 18.8 4 20Z"/><path d="m14.6 6 3.4 3.4"/>',
+ ruler:'<rect x="2.6" y="8.5" width="18.8" height="7" rx="1"/><path d="M6.4 8.5v3M10.2 8.5v4M14 8.5v3M17.8 8.5v4"/>',
+ note:'<rect x="4.5" y="3" width="15" height="18" rx="2"/><path d="M8.5 8h7M8.5 12h7M8.5 16h4"/>',
+ nut:'<path d="m12 3 7.8 4.5v9L12 21l-7.8-4.5v-9L12 3Z"/><circle cx="12" cy="12" r="3.2"/>',
+ hand:'<path d="M7.2 12V6.4a1.4 1.4 0 0 1 2.8 0V11m0-1.6V4.8a1.4 1.4 0 0 1 2.8 0V11m0-.8V5.8a1.4 1.4 0 0 1 2.8 0V12m0-.4V8a1.4 1.4 0 0 1 2.8 0v7a6 6 0 0 1-6 6h-1a5.6 5.6 0 0 1-4.7-2.6l-2.3-3.6a1.5 1.5 0 0 1 2.4-1.7l1.2 1.4"/>',
+ tree:'<path d="M12 21v-5M12 3l6 8h-3.4l3.8 5H5.6l3.8-5H6l6-8Z"/>',
+ tent:'<path d="M12 4 2.5 20h19L12 4Z"/><path d="M12 4v16M8.4 20l3.6-6 3.6 6"/>',
+ brick:'<path d="M2.5 6h19v12h-19zM2.5 10h19M2.5 14h19M8 6v4M14 6v4M5.5 10v4M11.5 10v4M17.5 10v4M8 14v4M14 14v4"/>',
+ house:'<path d="M3.5 11 12 4l8.5 7M5.5 9.6V20h13V9.6M10 20v-5h4v5"/>',
+ bridge:'<path d="M2 15h20M2 15v4M22 15v4M5 15v-3M19 15v-3M12 15v-5"/><path d="M3.5 12c2.6-4.8 14.4-4.8 17 0"/>',
+ bandage:'<rect x="3" y="9" width="18" height="6" rx="3" transform="rotate(-40 12 12)"/><circle cx="10.8" cy="10.8" r=".7" fill="__C__"/><circle cx="13.2" cy="13.2" r=".7" fill="__C__"/><circle cx="13.2" cy="10.8" r=".7" fill="__C__"/><circle cx="10.8" cy="13.2" r=".7" fill="__C__"/>',
+ heart:'<path d="M12 20S4.5 15.4 3 11.2C2 8.4 3.8 5.4 6.8 5.4c2 0 3.4 1 4.4 2.4 1-1.4 2.4-2.4 4.4-2.4 3 0 4.8 3 3.8 5.8C19.5 15.4 12 20 12 20Z"/>',
+ stetho:'<path d="M6 3v5a4 4 0 0 0 8 0V3M8 3v2m4-2v2M10 12v3.5a4.5 4.5 0 0 0 9 0V13"/><circle cx="19" cy="10.5" r="2.2"/>',
+ cross:'<path d="M9 3h6v6h6v6h-6v6H9v-6H3V9h6V3Z"/>',
+ thermo:'<path d="M10 4.5a2 2 0 0 1 4 0v9.3a3.6 3.6 0 1 1-4 0V4.5Z"/><path d="M12 9v6"/><circle cx="12" cy="16.6" r="1.2" fill="__C__"/>',
+ syringe:'<path d="m17 4 3 3M14.5 6.5l3 3M6.5 14.5l-3.5 3.5M15.5 5.5 5.5 15.5l3 3 10-10-3-3Z"/><path d="M9.5 11.5 12 14M11.5 9.5 14 12"/>',
+ clock:'<circle cx="12" cy="12" r="8.6"/><path d="M12 7.5V12l3 2"/>',
+ people:'<circle cx="9" cy="8.5" r="3"/><path d="M3.5 19c.5-3.5 2.5-5.5 5.5-5.5s5 2 5.5 5.5"/><circle cx="16.8" cy="9.5" r="2.4"/><path d="M16 13.6c2.6.2 4.2 2 4.6 5"/>',
+ coffee:'<path d="M4 8h12v6a5 5 0 0 1-10 0V8Z"/><path d="M16 9.5h2a2.2 2.2 0 0 1 0 4.4h-2M6 19.5h9M8 3.5c0 1.2 1 1.2 1 2.4M11 3.5c0 1.2 1 1.2 1 2.4"/>',
+ cap:'<path d="m12 4-9 4.5L12 13l9-4.5L12 4Z"/><path d="M6.5 10.8V16c0 1.2 2.5 2.6 5.5 2.6s5.5-1.4 5.5-2.6v-5.2M21 8.5V14"/>',
+ camera:'<path d="M4 8h3.5l1.5-2.5h6L16.5 8H20a1.5 1.5 0 0 1 1.5 1.5v8A1.5 1.5 0 0 1 20 19H4a1.5 1.5 0 0 1-1.5-1.5v-8A1.5 1.5 0 0 1 4 8Z"/><circle cx="12" cy="13" r="3.4"/>',
+ star:'<path d="m12 3.6 2.5 5.3 5.8.7-4.3 4 1.1 5.8L12 16.6l-5.1 2.8 1.1-5.8-4.3-4 5.8-.7L12 3.6Z"/>',
+ swatch:'<rect x="3" y="4" width="8" height="16" rx="2"/><path d="M11 6.5l4.5-2.6 2.8 4.8L11 14M11 17.5l7.5-4.3 2.4 4.2a2 2 0 0 1-.7 2.7l-5 2.9"/>',
+ shapes:'<circle cx="7.5" cy="7.5" r="4"/><rect x="12.5" y="12.5" width="8" height="8" rx="1.2"/><path d="m16.5 3.5 4 7h-8l4-7Z"/>',
+ frame:'<rect x="3.5" y="3.5" width="17" height="17" rx="1.5"/><rect x="6.5" y="6.5" width="11" height="11" rx=".8"/><path d="m8 15 2.6-3 2 2.2 1.8-2.2 2.6 3"/>',
+ latinA:'<path d="M4 18 8.5 6l4.5 12M5.7 14h5.6"/><path d="M15 12.5c1.5-1.4 4.5-1.2 4.5 1v4.5M19.5 14.6c-2.5-.4-4.5.5-4.5 2s2.8 2.2 4.5.4"/>',
+ plane:'<path d="M10.5 20.5 13 14l5.5-5.5c1.2-1.2 1.8-3 1-3.9-.9-.8-2.7-.2-3.9 1L10 11 3.5 13.5l2 2L10 14l-1.5 4.5 2 2Z"/>',
+ leaf:'<path d="M4 20C6 10 12 5 20 4c-1 8-6 14-16 16Z"/><path d="M4 20c4-5 8-8 12-11"/>',
+ paw:'<circle cx="7" cy="9.5" r="1.8"/><circle cx="17" cy="9.5" r="1.8"/><circle cx="9.8" cy="5.8" r="1.6"/><circle cx="14.2" cy="5.8" r="1.6"/><path d="M12 11.5c2.8 0 5 2.4 5 4.6 0 1.6-1.2 2.5-2.6 2.5-.9 0-1.6-.6-2.4-.6s-1.5.6-2.4.6C8.2 18.6 7 17.7 7 16.1c0-2.2 2.2-4.6 5-4.6Z"/>',
+ flag:'<path d="M5 21V3.5M5 4h11l-2 3.5 2 3.5H5"/>',
+ bank:'<path d="M3 9.5 12 4l9 5.5M4.5 9.5h15M6.3 12.5v5m3.8-5v5m3.8-5v5m3.8-5v5M4 20.5h16"/>',
+ cart:'<path d="M3 4h2.5l2.2 10.5h10.8L21 7H7"/><circle cx="9.5" cy="18.5" r="1.6"/><circle cx="16.5" cy="18.5" r="1.6"/>',
+ tag:'<path d="M3.5 12.5V4h8.5L21 13l-8.5 8.5L3.5 12.5Z"/><circle cx="8" cy="8.5" r="1.4"/>',
+ chart:'<path d="M4 20h16M6 20v-5m4 5V9m4 11v-7m4 7V6"/><path d="m13 8 5-4m0 0h-3.4M18 4v3.4"/>',
+ calc:'<rect x="6" y="3" width="12" height="18" rx="2"/><rect x="8.5" y="5.5" width="7" height="3.4"/><path d="M9 12.4h.01M12 12.4h.01M15 12.4h.01M9 15.4h.01M12 15.4h.01M15 15.4h.01M9 18.4h6"/>',
+ percent:'<path d="M18.5 5.5 5.5 18.5"/><circle cx="7.5" cy="7.5" r="2.6"/><circle cx="16.5" cy="16.5" r="2.6"/>',
+ gavel:'<path d="m13.5 3.5 7 7-2.4 2.4-7-7 2.4-2.4ZM9.4 7.6l7 7M3 21l7.5-7.5"/><path d="M3 21h8"/>',
+ shield:'<path d="M12 3 4 6.5v5.2c0 4.6 3.4 8.3 8 9.3 4.6-1 8-4.7 8-9.3V6.5L12 3Z"/><path d="m9 12 2.2 2.2L15.3 10"/>',
+ scroll:'<path d="M7.5 4h10a2 2 0 0 1 2 2v1.6h-4.2M7.5 4a2 2 0 0 0-2 2v11.5A2.5 2.5 0 0 1 3 20h13.5a3 3 0 0 0 3-3V6"/><path d="M9 9h6M9 12.5h6M9 16h4"/>',
+ feather:'<path d="M20 4c-6 0-11 4-13 10l-3 6 6-3c6-2 10-7 10-13Z"/><path d="M4 20 14 10"/>',
+ star8:'<path d="M12 3l2 5 5-2-2 5 5 2-5 2 2 5-5-2-2 5-2-5-5 2 2-5-5-2 5-2-2-5 5 2 2-5Z"/>',
+ lock:'<rect x="5" y="10.5" width="14" height="10" rx="2"/><path d="M8 10.5V7.5a4 4 0 0 1 8 0v3M12 14.5v2.5"/>',
+ rocket:'<path d="M12 3c3 2 4.5 6 4.5 10l-4.5 3-4.5-3C7.5 9 9 5 12 3Z"/><circle cx="12" cy="10" r="1.6"/><path d="M7.5 13 5 17l3.5-.5M16.5 13 19 17l-3.5-.5M10.5 17.5 12 21l1.5-3.5"/>',
+ telescope:'<path d="m4 13 11.5-8 3 5L7 18l-3-5Z"/><path d="M9 20l3-5 3 5M18 8l2.5-1.5"/>',
+ planet:'<circle cx="12" cy="12" r="5.5"/><path d="M4.5 9.5c-2 3 1 6.5 8 6.5s11-4 8.5-7.5"/>',
+ flask:'<path d="M9.5 3h5M10.5 3v6.2L5.2 18a2 2 0 0 0 1.8 3h10a2 2 0 0 0 1.8-3L13.5 9.2V3"/><path d="M7.5 15h9"/>',
+ calendar:'<rect x="3.5" y="5" width="17" height="15.5" rx="2"/><path d="M3.5 9.5h17M8 3v4M16 3v4M7.5 13h2m3 0h2m3 0h2M7.5 16.5h2m3 0h2"/>',
+ road:'<path d="M8 21 10.5 3h3L16 21M12 6v2.5M12 11v3M12 16.5v2"/>',
+ trophy:'<path d="M7 4h10v5a5 5 0 0 1-10 0V4Z"/><path d="M7 6H4.5a2.5 2.5 0 0 0 2.5 5M17 6h2.5a2.5 2.5 0 0 1-2.5 5M12 14v3.5M8.5 20.5h7M9.5 17.5h5v3"/>',
+ hammer:'<path d="M14 6.5 7.5 13l-4 4 3.5 3.5 4-4 6.5-6.5"/><path d="m12.5 5 6.5 6.5 2-2L14.5 3l-2 2Z"/>'
 };
-function motifArt(kind,c,seed){
-  var r=rng(seed), m=MOTIF[kind]||MOTIF.puzzle, s='', COLS=8, ROWS=3, cw=AW/COLS, ch=AH/ROWS;
+/* طقم رموز لكل سؤال (الأول هو الرمز الرئيس ويظهر أكثر قليلاً) */
+var QSET_BARS=[
+ ["puzzle","sigma","qmark","bulb","compass"],["rainbow","cloud","sun","lightning","sparkle"],["bits","phone","laptop","sparkle","plug"],
+ ["magnifier","check","pencil","ruler","note"],["wrench","cog","screw","plug","nut"],["bulb","book","hand","blocks","pencil"],
+ ["mountain","tree","sun","tent","cloud"],["crane","brick","ruler","house","bridge"],["pulse","bandage","heart","stetho","cross"],
+ ["pills","thermo","heart","syringe","clock"],["chat","heart","hand","people","coffee"],["board","cap","pencil","book","bulb"],
+ ["brush","palette","camera","pencil","star"],["palette","swatch","shapes","ruler","frame"],["globe","chat","latinA","plane","book"],
+ ["sprout","leaf","paw","sun","cloud"],["team","flag","check","clock","board"],["coins","bank","cart","tag","chart"],
+ ["numbers","calc","percent","chart","check"],["scales","gavel","hand","shield","flag"],["quill","scroll","feather","book","star8"],
+ ["rules","gavel","check","scroll","lock"],["atom","rocket","telescope","planet","flask"],["hourglass","calendar","road","cap","trophy"]
+];
+var QSET_LIKERT=[
+ ["puzzle","sigma","qmark","compass","bulb"],["qmark","bulb","magnifier","sparkle","compass"],["wrench","hand","blocks","screw","cog"],
+ ["magnifier","ruler","check","pencil","note"],["bits","phone","laptop","sparkle","plug"],["cog","screw","wrench","nut","plug"],
+ ["mountain","tree","sun","tent","cloud"],["crane","brick","house","ruler","city"],["blocks","hammer","check","brick","trophy"],
+ ["screw","magnifier","ruler","wrench","hand"],["chat","heart","coffee","people","hand"],["pulse","bandage","cross","stetho","syringe"],
+ ["heart","hand","pills","bandage","stetho"],["board","cap","people","pencil","bulb"],["flag","team","trophy","check","compass"],
+ ["globe","chat","latinA","plane","book"],["quill","scroll","star8","book","feather"],["brush","palette","camera","pencil","star"],
+ ["palette","swatch","shapes","frame","ruler"],["sprout","leaf","paw","sun","cloud"],["briefcase","cart","tag","rocket","chart"],
+ ["coins","chart","bank","tag","percent"],["numbers","calc","percent","check","chart"],["scales","gavel","shield","hand","flag"],
+ ["rules","scroll","lock","gavel","check"],["hourglass","calendar","road","trophy","mountain"],["book","quill","pencil","feather","scroll"],
+ ["atom","rocket","telescope","planet","flask"],["mind","qmark","chat","people","heart"],["city","house","flag","sprout","sun"]
+];
+function motifArt(set,c,seed){
+  var r=rng(seed), s='', COLS=8, ROWS=3, cw=AW/COLS, ch=AH/ROWS, W=[3,2,2,1.5,1.5], tot=10;
   for(var row=0;row<ROWS;row++){ for(var col=0;col<COLS;col++){
-    if(r()<.46) continue;
+    if(r()<.42) continue;
+    var pick=r()*tot, idx=0, acc=W[0]; while(pick>acc && idx<set.length-1){ idx++; acc+=W[idx]; }
+    var m=(MOTIF[set[idx]]||MOTIF[set[0]]||MOTIF.puzzle).split('__C__').join(c);
     var cx=col*cw+cw*(.18+r()*.64), cy=row*ch+ch*(.18+r()*.64);
     var sc=(.95+r()*1.15), rot=(r()-.5)*22, op=(.14+r()*.12);
-    if(op<.025) continue;
-    s+='<g transform="translate('+f0(cx)+' '+f0(cy)+') rotate('+f0(rot)+') scale('+sc.toFixed(2)+') translate(-12 -12)" stroke="'+c+'" stroke-width="1.25" fill="none" stroke-linecap="round" stroke-linejoin="round" vector-effect="non-scaling-stroke" opacity="'+f2(op)+'">'+m+'</g>';
+    var mk=set[idx], mo=MOTION_OF[mk]||"float", sd=(mo==="spin"?(30+r()*40):(mo==="pulse"?(2.6+r()*2):(mo==="flicker"?(4+r()*5):(5+r()*5)))).toFixed(1);
+    s+='<g transform="translate('+f0(cx)+' '+f0(cy)+') rotate('+f0(rot)+') scale('+sc.toFixed(2)+') translate(-12 -12)" stroke="'+c+'" stroke-width="1.25" fill="none" stroke-linecap="round" stroke-linejoin="round" vector-effect="non-scaling-stroke" opacity="'+f2(op)+'"><g class="mo '+mo+'" style="--sd:'+sd+'s;animation-delay:-'+(r()*sd).toFixed(1)+'s">'+m+'</g></g>';
   }}
   return s;
 }
-/* رمز لكل سؤال بحسب موضوعه */
-var QMAP_BARS=["puzzle","rainbow","bits","magnifier","wrench","bulb","mountain","crane","pulse","pills","chat","board","brush","palette","globe","sprout","team","coins","numbers","scales","quill","rules","atom","hourglass"];
-var QMAP_LIKERT=["puzzle","bulb","wrench","magnifier","bits","cog","mountain","crane","blocks","screw","chat","pulse","pills","board","team","globe","quill","brush","palette","sprout","briefcase","coins","numbers","scales","rules","hourglass","book","atom","mind","city"];
 function questionArt(i){
-  var map=(typeof QUESTIONS!=="undefined"&&QUESTIONS.length===24)?QMAP_BARS:QMAP_LIKERT;
-  return '<svg class="bgart" viewBox="0 0 900 280" preserveAspectRatio="xMidYMin slice" aria-hidden="true">'+motifArt(map[i]||"puzzle",qColor(i),1000+i*31)+'</svg>';
+  var sets=(typeof QUESTIONS!=="undefined"&&QUESTIONS.length===24)?QSET_BARS:QSET_LIKERT;
+  var set=(i>=sets.length)?["compass","magnifier","sparkle","check","flag"]:sets[i];
+  return '<svg class="bgart" viewBox="0 0 900 280" preserveAspectRatio="xMidYMin slice" aria-hidden="true">'+motifArt(set,qColor(i),1000+i*31)+'</svg>';
 }
-
 function brIcon(gk,c,sz){
   return '<svg viewBox="0 0 24 24" fill="none" width="'+sz+'" height="'+sz+'" style="filter:drop-shadow(0 0 6px '+c+'77)">'+
     '<g stroke="'+c+'" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" fill="none">'+GLYPHS[gk]+'</g></svg>';
@@ -891,7 +1049,7 @@ var BRANCHES=[
   w:{NAT:.7,F_FLD:.5,SCI:.2,F_AP:.2},sim:["هندسة الآلات الزراعية","تكنولوجيا الأغذية"],
   st:"إنتاج نباتي وحيواني ووقاية وتربة ومياه واقتصاد زراعي",af:"مهندس زراعي وإدارة مزارع ومشاريع غذائية"},
  {n:"الحقوق",f:"كلية الحقوق",y:4,g:"law",url:U+"college-of-law/",
-  w:{LAW:.85,LANG:.25,F_LEAD:.2},sim:["الشريعة","الاقتصاد والعلاقات الاقتصادية الدولية"],
+  w:{LAW:.85,LANG:.25,F_LEAD:.2},sim:["الشريعة","الفلسفة"],
   st:"قانون مدني وجزائي وتجاري ودولي وأصول محاكمات",af:"محامٍ، قاضٍ بعد المسابقة، مستشار قانوني"},
  {n:"الشريعة",f:"كلية الشريعة",y:4,g:"mosque",url:U+"college-of-sharia/",
   w:{LAW:.45,LANG:.35,F_HER:.55,SOC:.25},sim:["الحقوق","اللغة العربية وآدابها"],
@@ -906,52 +1064,52 @@ var BRANCHES=[
   w:{MED:.55,F_CARE:.45,F_AP:.3,SOC:.2},sim:["التمريض","الطب البشري"],
   st:"علوم طبية مساندة وتأهيل صحي (كلية حديثة بحلب)",af:"كوادر صحية مساندة في المشافي ومراكز التأهيل"},
  /* الكهربائية والإلكترونية */
- {n:"هندسة الاتصالات",f:"كلية الهندسة الكهربائية والإلكترونية",y:5,g:"antenna",inst:"المعهد التقاني للهندسة الميكانيكية والكهربائية",url:U+"faculty-of-electrical-and-electronic-engineering/",
+ {n:"هندسة الاتصالات",f:"كلية الهندسة الكهربائية والإلكترونية",y:5,g:"antenna",inst:"إشارات ونظم اتصالات سلكية ولاسلكية، شبكات محلية وواسعة، بث إذاعي وتلفزيوني، مقاسم هاتفية",url:U+"faculty-of-electrical-and-electronic-engineering/",
   w:{ENG:.55,TECH:.4,SCI:.35,F_AN:.25},sim:["الهندسة الإلكترونية","هندسة الحواسيب"],
-  st:"إشارات وهوائيات وشبكات خليوية واتصالات ضوئية",af:"مهندس اتصالات في شركات الخليوي والإنترنت"},
- {n:"هندسة الحواسيب",f:"كلية الهندسة الكهربائية والإلكترونية",y:5,g:"chip",inst:"المعهد التقاني للحاسوب",url:U+"faculty-of-electrical-and-electronic-engineering/",
+  st:"إشارات وهوائيات وشبكات خليوية واتصالات ضوئية",af:"مهندس اتصالات في شركات الخليوي والمقاسم ومؤسسات البث وشبكات الإنترنت"},
+ {n:"هندسة الحواسيب",f:"كلية الهندسة الكهربائية والإلكترونية",y:5,g:"chip",inst:"عتاد الحاسوب والبرمجيات معاً: معالجات صغرية ومتحكمات، أنظمة تشغيل، دارات ملاءمة الأجهزة الطرفية",url:U+"faculty-of-electrical-and-electronic-engineering/",
   w:{TECH:.6,ENG:.45,F_AN:.2},sim:["الهندسة المعلوماتية","هندسة الاتصالات"],
-  st:"معمارية حواسيب وأنظمة مضمّنة وشبكات",af:"مهندس أنظمة مضمّنة وعتاد وشبكات"},
+  st:"معمارية حواسيب وأنظمة مضمّنة وشبكات",af:"تصميم المعالجات والأنظمة المضمّنة، شبكات وأنظمة مراقبة وإنذار للمنازل والمنشآت"},
  {n:"هندسة التحكم الآلي والأتمتة الصناعية",f:"كلية الهندسة الكهربائية والإلكترونية",y:5,g:"sliders",inst:"المعهد التقاني للهندسة الميكانيكية والكهربائية",url:U+"faculty-of-electrical-and-electronic-engineering/",
   w:{ENG:.6,TECH:.35,F_AP:.35},sim:["هندسة الميكاترونيك","الهندسة الإلكترونية"],
   st:"أنظمة تحكم وPLC وأتمتة معامل وحساسات",af:"مهندس أتمتة في المعامل والمحطات"},
- {n:"الهندسة الإلكترونية",f:"كلية الهندسة الكهربائية والإلكترونية",y:5,g:"diode",inst:"المعهد التقاني للهندسة الميكانيكية والكهربائية",url:U+"faculty-of-electrical-and-electronic-engineering/",
+ {n:"الهندسة الإلكترونية",f:"كلية الهندسة الكهربائية والإلكترونية",y:5,g:"diode",inst:"نظم إلكترونية صناعية، وإلكترونيات طبية (تجهيزات المشافي)",url:U+"faculty-of-electrical-and-electronic-engineering/",
   w:{ENG:.6,TECH:.3,F_DET:.4},sim:["هندسة الاتصالات","التقانات الإلكترونية"],
-  st:"دارات إلكترونية وإلكترونيات قدرة ومعالجات دقيقة",af:"مهندس إلكترونيات تصميماً وصيانة"},
- {n:"هندسة نظم القدرة الكهربائية",f:"كلية الهندسة الكهربائية والإلكترونية",y:5,g:"bolt",inst:"المعهد التقاني للهندسة الميكانيكية والكهربائية",url:U+"faculty-of-electrical-and-electronic-engineering/",
+  st:"دارات إلكترونية وإلكترونيات قدرة ومعالجات دقيقة",af:"تصميم وتنفيذ الأنظمة الإلكترونية للصناعة، أو تطوير وصيانة التجهيزات الطبية"},
+ {n:"هندسة نظم القدرة الكهربائية",f:"كلية الهندسة الكهربائية والإلكترونية",y:5,g:"bolt",inst:"توليد ونقل وتوزيع الطاقة، توتر عالٍ وحمايات وعزل، طاقات متجددة (ريحية وشمسية ومائية)",url:U+"faculty-of-electrical-and-electronic-engineering/",
   w:{ENG:.7,F_BLD:.3,SCI:.2},sim:["هندسة القيادة الكهربائية","هندسة الطاقة الميكانيكية"],
-  st:"توليد ونقل وتوزيع الطاقة ومحطات وحمايات",af:"مهندس كهرباء في التوليد والشبكات"},
- {n:"هندسة القيادة الكهربائية",f:"كلية الهندسة الكهربائية والإلكترونية",y:5,g:"motor",inst:"المعهد التقاني للهندسة الميكانيكية والكهربائية",url:U+"faculty-of-electrical-and-electronic-engineering/",
+  st:"توليد ونقل وتوزيع الطاقة ومحطات وحمايات",af:"مهندس كهرباء في محطات التوليد وشبكات النقل والتوزيع ومشاريع المتجددة"},
+ {n:"هندسة القيادة الكهربائية",f:"كلية الهندسة الكهربائية والإلكترونية",y:5,g:"motor",inst:"آلات كهربائية ومحركات خاصة، PLC وSCADA، إلكترونيات صناعية، بطاقات FPGA/DSP، محاكاة Matlab",url:U+"faculty-of-electrical-and-electronic-engineering/",
   w:{ENG:.7,F_AP:.35},sim:["هندسة نظم القدرة الكهربائية","هندسة الميكاترونيك"],
-  st:"آلات كهربائية ومحركات وقيادتها وإلكترونيات قدرة",af:"مهندس آلات كهربائية في الصناعة"},
- {n:"هندسة الميكاترونيك",f:"كلية الهندسة الكهربائية والإلكترونية",y:5,g:"robot",inst:"المعهد التقاني للهندسة الميكانيكية والكهربائية",url:U+"faculty-of-electrical-and-electronic-engineering/",
+  st:"آلات كهربائية ومحركات وقيادتها وإلكترونيات قدرة",af:"أتمتة العمليات الإنتاجية وقيادة المحركات والآلات في المعامل"},
+ {n:"هندسة الميكاترونيك",f:"كلية الهندسة الكهربائية والإلكترونية",y:5,g:"robot",inst:"روبوتيكس، أنظمة رقمية مدمجة، معالجة صورة، تحكم ذكي، روبوتات طبية",url:U+"faculty-of-electrical-and-electronic-engineering/",
   w:{ENG:.55,TECH:.45,F_AP:.3},sim:["هندسة التحكم الآلي والأتمتة الصناعية","هندسة الإنتاج"],
-  st:"ميكانيك + إلكترونيات + برمجة: روبوتات وأنظمة ذكية",af:"مهندس روبوتات وخطوط إنتاج ذكية"},
+  st:"ميكانيك + إلكترونيات + برمجة: روبوتات وأنظمة ذكية",af:"مهندس روبوتات وأنظمة ذكية وخطوط إنتاج مؤتمتة"},
  /* الميكانيكية */
- {n:"هندسة الطاقة الميكانيكية",f:"كلية الهندسة الميكانيكية",y:5,g:"fan",inst:"المعهد التقاني للهندسة الميكانيكية والكهربائية",url:U+"faculty-of-mechanics/",
-  w:{ENG:.7,SCI:.3,F_AP:.25},sim:["هندسة نظم القدرة الكهربائية","التدفئة والتكييف والتبريد"],
-  st:"ترموديناميك ومحركات وتبريد ومحطات طاقة",af:"مهندس طاقة وتكييف وطاقات متجددة"},
- {n:"هندسة الإنتاج",f:"كلية الهندسة الميكانيكية",y:5,g:"gears",inst:"المعهد التقاني للهندسة الميكانيكية والكهربائية (الإنتاج)",url:U+"faculty-of-mechanics/",
-  w:{ENG:.6,F_AP:.4,BUS:.15,F_DET:.2},sim:["الهندسة الصناعية","هندسة الميكاترونيك"],
-  st:"تشغيل معادن وتصميم آلات وCNC وضبط جودة",af:"مهندس إنتاج وتصنيع في المعامل"},
- {n:"هندسة الطيران",f:"كلية الهندسة الميكانيكية",y:5,g:"plane",inst:"المعهد التقاني للهندسة الميكانيكية والكهربائية (الطيران)",url:U+"faculty-of-mechanics/",
-  w:{ENG:.7,SCI:.35,F_DET:.3,F_GLB:.15},sim:["هندسة الطاقة الميكانيكية","هندسة الإنتاج"],
-  st:"إيروديناميك وهياكل ومحركات نفاثة وصيانة جوية",af:"مهندس صيانة وتشغيل طائرات ومطارات"},
+ {n:"هندسة الطاقة الميكانيكية",f:"كلية الهندسة الميكانيكية",y:5,g:"fan",inst:"محركات وطاقة أحفورية ومتجددة (شمسية ورياح وحيوية)، تدفئة وتكييف ومستودعات تبريد",url:U+"faculty-of-mechanics/",
+  w:{ENG:.7,SCI:.3,F_AP:.25},sim:["هندسة الطيران","التدفئة والتكييف والتبريد"],
+  st:"ترموديناميك ومحركات وتبريد ومحطات طاقة",af:"مصانع ومكاتب هندسية، مشاريع الطاقة البديلة والتكييف والإشراف على تنفيذها"},
+ {n:"هندسة الإنتاج",f:"كلية الهندسة الميكانيكية",y:5,g:"gears",inst:"تشغيل معادن، تصنيع القوالب وإنتاج القطع البلاستيكية، أتمتة خطوط الإنتاج",url:U+"faculty-of-mechanics/",
+  w:{ENG:.7,F_AP:.45,F_DET:.2,BUS:.1},sim:["الهندسة الصناعية","هندسة الميكاترونيك"],
+  st:"تشغيل معادن وتصميم آلات وCNC وضبط جودة",af:"مهندس إنتاج وتصنيع في المعامل بكل اختصاصاتها الإنتاجية"},
+ {n:"هندسة الطيران",f:"كلية الهندسة الميكانيكية",y:5,g:"plane",inst:"تصميم وصيانة الطائرات المدنية، برامج ABAQUS وANSYS وMATLAB",url:U+"faculty-of-mechanics/",
+  w:{ENG:.7,SCI:.4,F_DET:.3,F_GLB:.2},sim:["هندسة الطاقة الميكانيكية","هندسة الإنتاج"],
+  st:"إيروديناميك وهياكل ومحركات نفاثة وصيانة جوية",af:"مطارات وشركات طيران ومراكز بحوث"},
  {n:"الهندسة النووية",f:"كلية الهندسة الميكانيكية",y:5,g:"atom",url:U+"faculty-of-mechanics/",
   w:{SCI:.6,ENG:.45,F_AN:.35},sim:["الفيزياء","هندسة الطاقة الميكانيكية"],
-  st:"فيزياء نووية ومفاعلات ووقاية إشعاعية",af:"مهندس نووي في الطاقة والتطبيقات الإشعاعية"},
+  st:"فيزياء نووية ومواد مشعة، التشغيل الآمن للمنظومات النووية المدنية",af:"محطات الطاقة، الطب النووي، الاختبارات اللاإتلافية والتصوير الشعاعي، هيئة الطاقة الذرية والبيئة"},
  {n:"هندسة علم المواد الهندسية",f:"كلية الهندسة الميكانيكية",y:5,g:"crystal",url:U+"faculty-of-mechanics/",
   w:{SCI:.5,ENG:.45,F_DET:.35,F_AN:.2},sim:["الكيمياء","هندسة الإنتاج"],
-  st:"خواص معادن وبوليمرات ومعالجات حرارية واختبارات",af:"مهندس مواد في مخابر الجودة والصناعة"},
- {n:"هندسة الآلات الزراعية",f:"كلية الهندسة الميكانيكية",y:5,g:"tractor",inst:"المعهد التقاني الزراعي",url:U+"faculty-of-mechanics/",
+  st:"بنية المادة الميكروية وخواصها الميكانيكية، اختبار المواد واكتشاف عيوبها وتحسينها",af:"مهندس مواد في مخابر الجودة والصناعات المعدنية والبلاستيكية"},
+ {n:"هندسة الآلات الزراعية",f:"كلية الهندسة الميكانيكية",y:5,g:"tractor",inst:"آلات الإنتاج الزراعي، تجهيزات الري والصرف، تصميم أدوات تخفف الكدح الزراعي",url:U+"faculty-of-mechanics/",
   w:{ENG:.55,NAT:.35,F_FLD:.35,F_AP:.3},sim:["الهندسة الزراعية","هندسة الإنتاج"],
-  st:"جرارات وآلات حصاد وري وصيانة معدات",af:"مهندس تشغيل وصيانة المعدات الزراعية"},
+  st:"جرارات وآلات حصاد وري وصيانة معدات",af:"مهندس آلات زراعية في مصانع القطاعين العام والخاص"},
  {n:"الهندسة الصناعية",f:"كلية الهندسة الميكانيكية",y:5,g:"factory",url:U+"faculty-of-mechanics/",
   w:{ENG:.45,BUS:.4,F_LEAD:.35,F_NUM:.2},sim:["هندسة الإنتاج","إدارة الأعمال"],
-  st:"تخطيط إنتاج وبحوث عمليات وإدارة جودة",af:"مهندس تنظيم مصانع وتحسين إنتاجية"},
- {n:"هندسة ميكانيك الغزل والنسيج",f:"كلية الهندسة الميكانيكية",y:5,g:"yarn",inst:"المعهد التقاني للهندسة الميكانيكية والكهربائية (الغزل والنسيج)",url:U+"faculty-of-mechanics/",
+  st:"تخطيط إنتاج وبحوث عمليات وإدارة جودة وسلاسل إمداد",af:"تطبيقات في الطيران والسيارات والبنوك والمستشفيات وشركات البترول"},
+ {n:"هندسة ميكانيك الغزل والنسيج",f:"كلية الهندسة الميكانيكية",y:5,g:"yarn",inst:"غزل خيوط قطنية وصوفية، شعيرات نسيجية، نسيج ومصابغ وتجهيز أقمشة",url:U+"faculty-of-mechanics/",
   w:{ENG:.5,ART:.25,F_AP:.3,F_DET:.25},sim:["هندسة الإنتاج","الفنون الجميلة التطبيقية"],
-  st:"آلات غزل ونسيج وخيوط وأقمشة وصباغة",af:"مهندس نسيج في معامل حلب النسيجية"},
+  st:"آلات غزل ونسيج وخيوط وأقمشة وصباغة",af:"مهندس تقني أو مدير إنتاج أو مدير جودة في معامل الغزل والنسيج والألبسة"},
  /* التقنية */
  {n:"تقانات الهندسة البيئية",f:"كلية الهندسة التقنية",y:5,g:"leafdrop",url:U+"faculty-of-technical-engineering/",
   w:{NAT:.5,ENG:.4,F_FLD:.35,SCI:.2},sim:["تقانات الهندسة الحيوية","الجيولوجيا"],
@@ -965,19 +1123,19 @@ var BRANCHES=[
  /* العلوم */
  {n:"الرياضيات",f:"كلية العلوم",y:4,g:"sigma",url:U+"college-of-science/",
   w:{SCI:.85,F_AN:.6},sim:["الإحصاء الرياضي","الفيزياء"],
-  st:"تحليل وجبر ومعادلات تفاضلية ورياضيات تطبيقية",af:"مدرّس رياضيات وباحث ومحلل بيانات"},
+  st:"شعب: الجبر، التحليل الرياضي، الرياضيات التطبيقية والبرمجة",af:"تدريس الرياضيات في الجامعات والتربية، تحليل بيانات، دراسات عليا"},
  {n:"الفيزياء",f:"كلية العلوم",y:4,g:"prism",url:U+"college-of-science/",
-  w:{SCI:.75,F_AN:.45,ENG:.2},sim:["الرياضيات","الهندسة النووية"],
+  w:{SCI:.75,F_AN:.45,ENG:.2},sim:["الرياضيات","الكيمياء"],
   st:"ميكانيك وكهرومغناطيسية وفيزياء حديثة وبصريات",af:"مدرّس فيزياء ومخابر بحثية وصناعية"},
  {n:"الكيمياء",f:"كلية العلوم",y:4,g:"flask",url:U+"college-of-science/",
-  w:{SCI:.6,MED:.25,F_DET:.35,F_AP:.2},sim:["الصيدلة","تقانات الهندسة الحيوية"],
-  st:"كيمياء عضوية وتحليلية وحيوية ومخابر متقدمة",af:"كيميائي في مخابر التحليل والأدوية والصناعة"},
+  w:{SCI:.75,F_DET:.4,F_AP:.3,MED:.2},sim:["الصيدلة","الفيزياء"],
+  st:"شعب: كيمياء بحتة، كيمياء تطبيقية، كيمياء حيوية",af:"معامل كيميائية صناعية (دوائية وأسمنت ومنظفات)، مخابر تحليل طبي، تدريس"},
  {n:"علم الحياة",f:"كلية العلوم",y:4,g:"cell",url:U+"college-of-science/",
   w:{NAT:.45,MED:.4,SCI:.25,F_FLD:.2},sim:["تقانات الهندسة الحيوية","الهندسة الزراعية"],
-  st:"نبات وحيوان وخلية ووراثة وأحياء دقيقة",af:"مدرّس علوم ومخابر طبية ودراسات بيئية"},
+  st:"نبات وحيوان، خلية ووراثة، أحياء دقيقة وكيمياء حيوية وبيئة",af:"مخابر مصانع الأدوية والأغذية، مخابر التحاليل والمستشفيات، مخابر البيئة والمحميات"},
  {n:"الجيولوجيا",f:"كلية العلوم",y:4,g:"strata",url:U+"college-of-science/",
   w:{SCI:.4,NAT:.45,F_FLD:.5},sim:["الجغرافية","تقانات الهندسة البيئية"],
-  st:"صخور ومعادن وجيولوجيا نفط ومياه ومسح حقلي",af:"جيولوجي في النفط والمياه الجوفية والتعدين"},
+  st:"شعب: جيولوجيا تطبيقية وجيوفيزياء؛ صخور ومعادن ومسح حقلي",af:"النفط والثروة المعدنية، المياه الجوفية، الجيوهندسة للمنشآت والطرق والأنفاق"},
  {n:"الإحصاء الرياضي",f:"كلية العلوم",y:4,g:"bell",url:U+"college-of-science/",
   w:{SCI:.6,F_NUM:.5,F_AN:.35,BUS:.15},sim:["الرياضيات","الإحصاء ونظم المعلومات"],
   st:"احتمالات وإحصاء استدلالي وتحليل بيانات",af:"محلل بيانات وإحصائي في المصارف والدراسات"},
@@ -995,10 +1153,10 @@ var BRANCHES=[
   w:{LANG:.75,F_GLB:.5,BUS:.2},sim:["اللغة الفارسية وآدابها","اللغة الإنكليزية وآدابها"],
   st:"قواعد ومحادثة تركية وأدب وترجمة",af:"مترجم تركي وعمل تجاري مع تركيا"},
  {n:"اللغة الفارسية وآدابها",f:"كلية الآداب والعلوم الإنسانية",y:4,g:"scroll",url:U+"college-of-literature/",
-  w:{LANG:.75,F_GLB:.4,F_HER:.3},sim:["اللغة التركية وآدابها","اللغة العربية وآدابها"],
+  w:{LANG:.8,F_GLB:.45,F_HER:.35},sim:["اللغة التركية وآدابها","اللغة العربية وآدابها"],
   st:"قواعد فارسية وأدب كلاسيكي وحديث وترجمة",af:"مترجم فارسي وبحث أكاديمي وتدريس"},
  {n:"الفلسفة",f:"كلية الآداب والعلوم الإنسانية",y:4,g:"lamp",url:U+"college-of-literature/",
-  w:{F_AN:.55,LANG:.45,LAW:.2},sim:["علم الاجتماع","الحقوق"],
+  w:{F_AN:.65,LANG:.5,LAW:.25,SOC:.15},sim:["علم الاجتماع","الحقوق"],
   st:"منطق وفلسفة قديمة وحديثة وعلم نفس وأخلاق",af:"مدرّس فلسفة وباحث وكاتب فكري"},
  {n:"علم الاجتماع",f:"كلية الآداب والعلوم الإنسانية",y:4,g:"people",url:U+"college-of-literature/",
   w:{SOC:.55,F_AN:.35,LANG:.2},sim:["الإرشاد النفسي","الفلسفة"],
@@ -1015,17 +1173,17 @@ var BRANCHES=[
  /* التربية */
  {n:"الإرشاد النفسي",f:"كلية التربية",y:4,g:"headheart",url:U+"faculty-of-education/",
   w:{SOC:.6,F_CARE:.55,F_AN:.2,MED:.1},sim:["علم الاجتماع","معلم صف"],
-  st:"علم نفس النمو والشخصية وإرشاد فردي وجماعي",af:"مرشد نفسي مدرسي ودعم نفسي اجتماعي"},
+  st:"إرشاد وعلاج نفسي نظري وتطبيقي، علم نفس النمو والشخصية",af:"اختصاصي إرشاد نفسي واستشارات للأفراد والمؤسسات والمدارس"},
  {n:"معلم صف",f:"كلية التربية",y:4,g:"gradcap",url:U+"faculty-of-education/",
   w:{SOC:.7,F_CARE:.4,LANG:.2,F_LEAD:.2},sim:["المناهج وطرائق التدريس","الإرشاد النفسي"],
   st:"طرائق تدريس مواد الحلقة الأولى وعلم نفس الطفل",af:"معلم الصفوف الأساسية الأولى"},
  {n:"المناهج وطرائق التدريس",f:"كلية التربية",y:4,g:"bookgear",url:U+"faculty-of-education/",
   w:{SOC:.55,F_AN:.3,LANG:.2,F_DET:.2},sim:["معلم صف","الإرشاد النفسي"],
-  st:"بناء مناهج وتقنيات تعليم وقياس تربوي",af:"تطوير مناهج ووسائل تعليمية وعمل تربوي"},
+  st:"بناء المناهج وتطويرها، طرائق تدريس، تقنيات تعليم، إدارة تربوية",af:"إعداد المدرسين وتدريبهم، تطوير مناهج ووسائل تعليمية"},
  /* الاقتصاد */
- {n:"المحاسبة",f:"كلية الاقتصاد",y:4,g:"calc",eco:true,inst:"المعهد التقاني للعلوم المالية والمصرفية",url:U+"faculty-of-economics/",
+ {n:"المحاسبة",f:"كلية الاقتصاد",y:4,g:"calc",eco:true,inst:"محاسبة مالية وإدارية وتكاليف ودولية، تدقيق حسابات، برامج محاسبية جاهزة",url:U+"faculty-of-economics/",
   w:{BUS:.7,F_NUM:.6,F_DET:.3},sim:["العلوم المالية والمصرفية","الإحصاء ونظم المعلومات"],
-  st:"محاسبة مالية وإدارية وتكاليف وتدقيق",af:"محاسب قانوني ومدقق ومدير مالي"},
+  st:"محاسبة مالية وإدارية وتكاليف وتدقيق",af:"محاسب ومدقق ومفتش حكومي، وصولاً إلى شهادة المحاسب القانوني"},
  {n:"العلوم المالية والمصرفية",f:"كلية الاقتصاد",y:4,g:"bank",eco:true,inst:"المعهد التقاني للعلوم المالية والمصرفية",url:U+"faculty-of-economics/",
   w:{BUS:.8,F_NUM:.45},sim:["المحاسبة","الاقتصاد والعلاقات الاقتصادية الدولية"],
   st:"مصارف وتمويل واستثمار وأسواق مالية وتأمين",af:"مصرفي ومحلل مالي واستثماري"},
@@ -1037,155 +1195,250 @@ var BRANCHES=[
   st:"إدارة استراتيجية وموارد بشرية وريادة أعمال",af:"مدير مشاريع وفرق وريادي بمشروعه الخاص"},
  {n:"الإحصاء ونظم المعلومات",f:"كلية الاقتصاد",y:4,g:"pie",eco:true,url:U+"faculty-of-economics/",
   w:{BUS:.45,SCI:.4,F_NUM:.5,TECH:.2},sim:["الإحصاء الرياضي","المحاسبة"],
-  st:"إحصاء تطبيقي ونظم معلومات وتحليل بيانات أعمال",af:"محلل بيانات أعمال ونظم معلومات الشركات"},
- {n:"التسويق",f:"كلية الاقتصاد",y:4,g:"megaphone",eco:true,inst:"المعهد التقاني لإدارة الأعمال والتسويق",url:U+"faculty-of-economics/",
+  st:"شعب: نظم المعلومات الإدارية، الإحصاء التطبيقي، التأمين والمصارف",af:"تحليل إحصائي اقتصادي، إدارة نظم المعلومات، شركات التأمين والمصارف"},
+ {n:"التسويق",f:"كلية الاقتصاد",y:4,g:"megaphone",eco:true,inst:"24 مقرراً تخصصياً في السنتين الثالثة والرابعة: سلوك مستهلك، بحوث سوق، إعلان، تسويق رقمي",url:U+"faculty-of-economics/",
   w:{BUS:.6,SOC:.35,ART:.25,F_LEAD:.25},sim:["إدارة الأعمال","الفنون الجميلة التطبيقية"],
-  st:"سلوك مستهلك وتسويق رقمي وبحوث سوق وإعلان",af:"اختصاصي تسويق ومبيعات وعلامات تجارية"},
+  st:"سلوك مستهلك وتسويق رقمي وبحوث سوق وإعلان",af:"اختصاصي تسويق ومبيعات (القسم الوحيد في الجامعات الحكومية السورية)"},
  /* التطبيقية */
  {n:"التقانات الإلكترونية",f:"الكلية التطبيقية",y:4,g:"board",mihani:true,url:U+"applied-faculty/",
   w:{ENG:.5,TECH:.35,F_AP:.5},sim:["الهندسة الإلكترونية","التدفئة والتكييف والتبريد"],
-  st:"دارات وأنظمة إلكترونية تطبيقية وصيانة أجهزة",af:"إجازة تقنية: تقني إلكترونيات متقدم"},
- {n:"التدفئة والتكييف والتبريد",f:"الكلية التطبيقية",y:4,g:"snow",mihani:true,inst:"المعهد التقاني للهندسة الميكانيكية والكهربائية (التدفئة والتكييف)",url:U+"applied-faculty/",
+  st:"خطط تركيب الأجهزة الإلكترونية، تتبع مخططات الدارات، تشخيص الأعطال والمعايرة والصيانة",af:"إجازة تقنية: تقني إلكترونيات متقدم ومشرف صيانة"},
+ {n:"التدفئة والتكييف والتبريد",f:"الكلية التطبيقية",y:4,g:"snow",mihani:true,inst:"تدفئة مركزية وتكييف مركزي وغرف تبريد، تشخيص أعطال كهربائية وميكانيكية، تركيب وفق المخططات",url:U+"applied-faculty/",
   w:{ENG:.6,F_AP:.55},sim:["هندسة الطاقة الميكانيكية","التقانات الإلكترونية"],
-  st:"أنظمة تدفئة وتبريد وتكييف تصميماً وتنفيذاً",af:"إجازة تقنية: أنظمة التكييف في الأبنية"}
+  st:"أنظمة تدفئة وتبريد وتكييف تصميماً وتنفيذاً",af:"إجازة تقنية: تشغيل وتركيب وصيانة أنظمة التدفئة والتكييف والتبريد"}
 ];
 
+
 /* =====================================================================
-   5) محرك الرحلة
+   4-ب) العائلات والمواقف الحاسمة (المحطة السابعة التكيفية)
+   bw: وزن مباشر للفرع (سالب = الإجابة العالية تُبعده)
+   ===================================================================== */
+var FAMILIES={
+ ELEC:{n:"الفروع الكهربائية والإلكترونية والحاسوبية",m:["هندسة الاتصالات","هندسة الحواسيب","هندسة التحكم الآلي والأتمتة الصناعية","الهندسة الإلكترونية","هندسة نظم القدرة الكهربائية","هندسة القيادة الكهربائية","هندسة الميكاترونيك","الهندسة المعلوماتية","التقانات الإلكترونية"],q:[
+  {sc:"حين ترى جهازاً إلكترونياً معقداً (جهاز طبي، لوحة تحكم)…",a:["يكفيني أن يعمل ولا أهتم بما داخله.","أحب أن أعرف أجزاءه الرئيسية ووظيفة كل منها.","أريد فهم الدارة والإشارات داخله قطعة قطعة، وأحاول تصميم شيء مشابه."],bw:{"الهندسة الإلكترونية":.9,"التقانات الإلكترونية":.7,"هندسة الاتصالات":.4,"هندسة الحواسيب":.4}},
+  {sc:"الإنترنت والهاتف الخليوي والبث…",a:["أستخدمها ولا يشغلني كيف تعمل.","أتساءل أحياناً كيف تصل المكالمة أو الإشارة.","يستهويني فهم كيف تنتقل الإشارة عبر الأبراج والألياف والأقمار، وأتابع تقنيات الشبكات."],bw:{"هندسة الاتصالات":.95,"هندسة الحواسيب":.3}},
+  {sc:"لو خُيّرت بين مشروعين للتخرج…",a:["تطبيق أو نظام برمجي كامل على الشاشة بلا أي عتاد.","جهاز صغير فيه قليل من البرمجة وقليل من الدارات.","آلة تتحرك بمحركات وحساسات وتتحكم بها برمجياً."],bw:{"الهندسة المعلوماتية":-.8,"هندسة الميكاترونيك":.95,"هندسة التحكم الآلي والأتمتة الصناعية":.3,"هندسة القيادة الكهربائية":.15}},
+  {sc:"بين ضبط النظام وبناء الآلة…",a:["أحب برمجة المتحكمات وضبط حلقات التحكم حتى يستقر النظام.","بينهما.","أحب تصميم الروبوت ميكانيكياً وإلكترونياً معاً كجسم متكامل."],bw:{"هندسة التحكم الآلي والأتمتة الصناعية":-.9,"هندسة الميكاترونيك":.9}},,
+  {sc:"محطات التوليد والشبكات الكهربائية والتوتر العالي…",a:["أبتعد عنها ولا تعنيني.","أحترمها وأفهم أهميتها من بعيد.","تبهرني وأودّ العمل في تشغيلها وصيانتها وتطوير الطاقات المتجددة."],bw:{"هندسة نظم القدرة الكهربائية":.95,"هندسة القيادة الكهربائية":.35}},
+  {sc:"حين يتحرك روبوت أو خط إنتاج آلي أمامك…",a:["أستمتع بالمشهد فقط.","أتساءل عن الحساسات التي يعتمد عليها.","أريد أن أعرف كيف يُبرمج ويُضبط ليتحكم بحركته بدقة، وأجرّب بناء نموذج."],bw:{"هندسة التحكم الآلي والأتمتة الصناعية":.95,"هندسة الميكاترونيك":.4,"هندسة القيادة الكهربائية":.2}},
+  {sc:"الحاسوب من الداخل: المعالج والذاكرة واللوحة الأم…",a:["لا يهمني ما دام يعمل.","أميّز القطع وأستطيع تبديل بعضها.","أريد فهم كيف صُمّم المعالج والعتاد وكيف يتخاطب مع البرامج."],bw:{"هندسة الحواسيب":.95,"الهندسة الإلكترونية":.3,"الهندسة المعلوماتية":.25}}
+ ]},
+ MECH:{n:"الفروع الميكانيكية والصناعية",m:["هندسة الطاقة الميكانيكية","هندسة الإنتاج","هندسة الطيران","الهندسة النووية","هندسة علم المواد الهندسية","هندسة الآلات الزراعية","الهندسة الصناعية","هندسة ميكانيك الغزل والنسيج","التدفئة والتكييف والتبريد"],q:[
+  {sc:"الطائرات والمحركات النفاثة والمطارات…",a:["لا تشغلني أكثر من غيرها.","أتابع أخبارها بفضول عام.","أعشقها وأحلم بالعمل في تصميمها أو صيانتها."],bw:{"هندسة الطيران":.95}},
+  {sc:"الطاقة النووية والإشعاع والمفاعلات…",a:["أفضّل الابتعاد عنها.","أفهم أهميتها وأتابعها أحياناً.","تستهويني بقوة وأود التخصص في استثمارها الآمن والطب النووي."],bw:{"الهندسة النووية":.95}},
+  {sc:"المعادن والسبائك والبلاستيك وكيف تتغير خواصها…",a:["لا أفكر في الأمر.","أهتم إن ارتبط بمنتج أستخدمه.","يفتنني أن أفهم بنية المادة وأختبر خواصها وأطوّرها."],bw:{"هندسة علم المواد الهندسية":.95}},
+  {sc:"داخل المصنع، أيهما أقرب إليك؟",a:["العمل على الآلة نفسها: تشغيل المعادن والقوالب والقطع.","بين هذا وذاك.","تنظيم خط الإنتاج كله: الجودة والتكلفة والوقت والعمال."],bw:{"هندسة الإنتاج":-.8,"الهندسة الصناعية":.9}},
+  {sc:"المخرطة وماكينات CNC وصناعة القوالب والقطع…",a:["لا تشدّني.","أهتم بها كأدوات.","أعشق تشغيلها وتصميم القطع والقوالب وإنتاجها بدقة."],bw:{"هندسة الإنتاج":.95,"هندسة علم المواد الهندسية":.2}},
+  {sc:"الحرارة والتبريد والمحركات…",a:["لا تشغلني.","أفهم مبدأ المكيّف والمحرك وأكتفي.","أتحمس لتصميم أنظمة الطاقة والتكييف والمحركات وحساب كفاءتها."],bw:{"هندسة الطاقة الميكانيكية":.9,"التدفئة والتكييف والتبريد":.45}},
+  {sc:"بين المزرعة ومعمل النسيج…",a:["جرارات وحصادات ومعدات ري: أحب الآلات التي تخدم الأرض.","بينهما.","خيوط وأقمشة ومصابغ: أحب آلات الغزل والنسيج ومنتجاتها."],bw:{"هندسة الآلات الزراعية":-.9,"هندسة ميكانيك الغزل والنسيج":.9}}
+ ]},
+ BUILD:{n:"فروع البناء والتنفيذ",m:["الهندسة المدنية","الهندسة المعمارية","التدفئة والتكييف والتبريد"],q:[
+  {sc:"حين تنظر إلى مبنى جميل…",a:["أسأل: كيف يحمل نفسه؟ ما الأساسات والأعمدة؟","أتأمل الاثنين معاً.","أسأل: من صمّم شكله وواجهته وفراغاته الداخلية؟"],bw:{"الهندسة المدنية":-.9,"الهندسة المعمارية":.9}},
+  {sc:"ورشة البناء والإشراف على التنفيذ والحسابات الإنشائية…",a:["أبتعد عنها.","أزورها بفضول.","أحب أن أكون فيها: أحسب وأشرف وأتأكد أن كل شيء يُنفَّذ كما في المخطط."],bw:{"الهندسة المدنية":.9,"الهندسة المعمارية":.2}},
+  {sc:"رسم الواجهات وتخيّل الفراغات والنماذج ثلاثية الأبعاد…",a:["لا أجيده ولا يستهويني.","أستمتع به أحياناً.","أقضي فيه ساعات بمتعة وأتخيل الأبنية قبل أن تُبنى."],bw:{"الهندسة المعمارية":.95,"الهندسة المدنية":.1}},
+  {sc:"أنظمة التدفئة والتكييف داخل الأبنية…",a:["لا أفكر فيها.","أفهم أساسياتها.","أحب تصميمها وتركيبها وصيانتها كمهنة."],bw:{"التدفئة والتكييف والتبريد":.95}}
+ ]},
+ MED:{n:"الفروع الطبية والصحية",m:["الطب البشري","طب الأسنان","الصيدلة","التمريض","العلوم الصحية"],q:[
+  {sc:"العمل اليدوي الدقيق داخل فم المريض لساعات…",a:["لا أطيقه.","أستطيعه إن لزم.","يناسبني تماماً: يداي ثابتتان وأستمتع بالدقة."],bw:{"طب الأسنان":.95}},
+  {sc:"تركيب الأدوية وكيمياؤها وتأثيرها في الجسم…",a:["لا تستهويني.","أهتم بها بقدر ما تخدم المريض.","تفتنني، وأود العمل في الصيدلية والمخبر الدوائي."],bw:{"الصيدلة":.95,"الكيمياء":.15}},
+  {sc:"البقاء بجانب المريض ساعات ورعايته اليومية…",a:["أفضّل التشخيص والقرار ثم الانصراف.","أوازن بينهما.","هو جوهر ما أريد: المرافقة والرعاية والمتابعة."],bw:{"التمريض":.9,"العلوم الصحية":.5,"الطب البشري":-.2}},
+  {sc:"سنوات دراسة طويلة جداً ثم مسؤولية القرار الطبي الحاسم…",a:["أفضّل مساراً أقصر وضغطاً أقل.","مستعد جزئياً.","أقبلها بكل ما فيها: أريد أن أكون الطبيب الذي يقرر."],bw:{"الطب البشري":.9,"طب الأسنان":.3}},
+  {sc:"الأجهزة الطبية والتأهيل والمخابر الصحية…",a:["لا تشدّني.","أهتم بها كجزء من الرعاية.","أراها مجالي: العمل التقني الصحي بجانب الطبيب."],bw:{"العلوم الصحية":.95,"التمريض":.3}}
+ ]},
+ SCI:{n:"أقسام كلية العلوم",m:["الرياضيات","الفيزياء","الكيمياء","علم الحياة","الجيولوجيا","الإحصاء الرياضي","الهندسة النووية","هندسة علم المواد الهندسية"],q:[
+  {sc:"البرهان الرياضي المجرد بلا أي تطبيق مباشر…",a:["يضجرني.","أتحمله إن كان له فائدة.","أستمتع به لذاته وأتحدى نفسي فيه."],bw:{"الرياضيات":.95,"الإحصاء الرياضي":-.15}},
+  {sc:"التفاعلات الكيميائية في المخبر: الأنابيب والمواد والروائح…",a:["أتجنبها.","أجريها بحذر.","أعشقها وأحب اكتشاف ما تنتجه المواد حين تتفاعل."],bw:{"الكيمياء":.95}},
+  {sc:"الكائنات الحية والخلايا والأحياء الدقيقة…",a:["لا تستهويني.","أهتم بها عموماً.","أفتتن بها وأود دراستها تحت المجهر."],bw:{"علم الحياة":.95}},
+  {sc:"الصخور والأرض والتنقيب في الحقل…",a:["لا أطيق العمل الميداني.","أقبله أحياناً.","أحلم بالعمل في الحقول النفطية والمياه الجوفية والمعادن."],bw:{"الجيولوجيا":.95}},
+  {sc:"القوى والطاقة والضوء وقوانين الكون…",a:["أدرسها للنجاح فقط.","تثير فضولي أحياناً.","أعشق الفيزياء وأود التعمق في الذرة والفلك والليزر."],bw:{"الفيزياء":.95,"الهندسة النووية":.3}},
+  {sc:"البيانات والاحتمالات وتحليل الأرقام الكبيرة…",a:["لا تشدّني.","أستخدمها كأداة.","أراها مستقبلي: الإحصاء وتحليل البيانات."],bw:{"الإحصاء الرياضي":.95,"الرياضيات":-.1}}
+ ]},
+ AGRI:{n:"الفروع الزراعية والبيئية والغذائية",m:["الهندسة الزراعية","هندسة الآلات الزراعية","تقانات الهندسة البيئية","تكنولوجيا الأغذية","تقانات الهندسة الحيوية","علم الحياة"],q:[
+  {sc:"المحاصيل والتربة والري والحقل…",a:["لا أحب العمل في الأرض.","أقبله في المواسم.","أحبه وأود إدارة إنتاج زراعي حقيقي."],bw:{"الهندسة الزراعية":.9,"هندسة الآلات الزراعية":.4}},
+  {sc:"معامل الأغذية: التصنيع والحفظ والتعليب ورقابة الجودة…",a:["لا تشدّني.","أهتم بجودة ما آكله فقط.","أود العمل في تطوير منتج غذائي وضمان سلامته."],bw:{"تكنولوجيا الأغذية":.95,"الهندسة الزراعية":.2}},
+  {sc:"المخبر الحيوي: الجينات والخلايا والتخمير…",a:["لا يستهويني.","أتابع أخباره.","أحلم بالعمل فيه وتطوير منتجات حيوية."],bw:{"تقانات الهندسة الحيوية":.95,"علم الحياة":.4}},
+  {sc:"تلوث المياه والهواء ومحطات المعالجة والنفايات…",a:["أراها مشكلة غيري.","أهتم بها كمواطن.","أود العمل هندسياً على حلها."],bw:{"تقانات الهندسة البيئية":.95}},
+  {sc:"الجرارات والحصادات ومعدات الري…",a:["لا تعنيني.","أهتم بها كأدوات.","أحب تصميمها وصيانتها وتطويرها."],bw:{"هندسة الآلات الزراعية":.95}}
+ ]},
+ LANG:{n:"أقسام اللغات",m:["اللغة العربية وآدابها","اللغة الإنكليزية وآدابها","اللغة الفرنسية وآدابها","اللغة التركية وآدابها","اللغة الفارسية وآدابها"],q:[
+  {sc:"الأفلام والأغاني والكتب الإنكليزية…",a:["أحتاج الترجمة دائماً.","أفهم بعضها.","أستمتع بها بلا ترجمة وأحب ثقافتها."],bw:{"اللغة الإنكليزية وآدابها":.9}},
+  {sc:"الفرنسية وثقافتها…",a:["لا أعرفها ولا أميل إليها.","أعرف كلمات وتعجبني موسيقاها.","أحبها وأود إتقانها والعمل بها."],bw:{"اللغة الفرنسية وآدابها":.95}},
+  {sc:"تركيا: لغتها ومسلسلاتها وأسواقها…",a:["لا تشدّني.","أفهم بعض التركية.","أحب اللغة التركية وأرى فيها فرصة عمل وتجارة."],bw:{"اللغة التركية وآدابها":.95}},
+  {sc:"الشعر الفارسي والثقافة الإيرانية…",a:["بعيدة عني.","أعرف عنها قليلاً.","تجذبني وأود دراسة لغتها وأدبها."],bw:{"اللغة الفارسية وآدابها":.95,"اللغة العربية وآدابها":-.2}},
+  {sc:"النحو والبلاغة والشعر العربي…",a:["أراها صعبة وجافة.","أحب منها الشعر فقط.","أعشقها وأود التعمق فيها والتدريس أو الكتابة."],bw:{"اللغة العربية وآدابها":.95,"اللغة الفارسية وآدابها":-.15}}
+ ]},
+ HUM:{n:"الأقسام الإنسانية والشرعية والقانونية",m:["الفلسفة","علم الاجتماع","الجغرافية","الآثار","التاريخ","الشريعة","الحقوق"],q:[
+  {sc:"الأسئلة الكبرى: الوجود والمعرفة والأخلاق…",a:["مضيعة للوقت.","أفكر فيها أحياناً.","تشغلني بعمق وأحب قراءة الفلاسفة."],bw:{"الفلسفة":.95}},
+  {sc:"دراسة المجتمع بالأرقام والمقابلات والاستبيانات…",a:["لا تشدّني.","أهتم بنتائجها.","أود أن أكون الباحث الذي يجريها."],bw:{"علم الاجتماع":.95}},
+  {sc:"الخرائط والمناخ والسكان والمدن…",a:["لا تعنيني.","أحب الخرائط أحياناً.","تستهويني وأود العمل بنظم المعلومات الجغرافية."],bw:{"الجغرافية":.95}},
+  {sc:"التنقيب والمواقع الأثرية والقطع القديمة…",a:["لا تشدّني.","أزورها بفضول.","أحلم بالعمل في التنقيب والمتاحف."],bw:{"الآثار":.95,"التاريخ":.25}},
+  {sc:"الأحداث والعصور والشخصيات التاريخية…",a:["أحفظها للامتحان فقط.","أستمتع ببعض القصص.","أعشق التاريخ وأقرأ فيه بلا انقطاع."],bw:{"التاريخ":.95,"الآثار":.25}},
+  {sc:"بين النصوص الشرعية والقانون الوضعي…",a:["الفقه والحديث والعقيدة: مجالي هو الشرع.","بينهما.","المحاكم والقوانين والمرافعات: مجالي هو القانون."],bw:{"الشريعة":-.9,"الحقوق":.9}}
+ ]},
+ EDU:{n:"أقسام التربية",m:["الإرشاد النفسي","معلم صف","المناهج وطرائق التدريس","علم الاجتماع"],q:[
+  {sc:"الأطفال الصغار وتعليمهم القراءة والحساب…",a:["يستنزفونني.","أتعامل معهم بصبر.","أعشق تعليمهم وأرى فيهم مستقبلي."],bw:{"معلم صف":.95}},
+  {sc:"الجلوس مع شخص واحد ليحدثك عن مشكلاته النفسية…",a:["يرهقني.","أستطيع الإصغاء.","هذا ما أجيده وأريد احترافه علمياً."],bw:{"الإرشاد النفسي":.95,"علم الاجتماع":.2}},
+  {sc:"تصميم درس أو منهاج ووسائل تعليمية وتقييمها…",a:["لا يشدّني.","أفعله عند الحاجة.","يستهويني: أحب هندسة العملية التعليمية نفسها."],bw:{"المناهج وطرائق التدريس":.95}},
+  {sc:"فهم المجتمع وظواهره ككل لا الأفراد فقط…",a:["أركز على الأفراد.","بينهما.","يشدّني المجتمع ككل: الطبقات والعادات والتغير."],bw:{"علم الاجتماع":.9,"الإرشاد النفسي":-.3}}
+ ]},
+ ECON:{n:"اختصاصات كلية الاقتصاد",m:["المحاسبة","العلوم المالية والمصرفية","الاقتصاد والعلاقات الاقتصادية الدولية","إدارة الأعمال","الإحصاء ونظم المعلومات","التسويق"],q:[
+  {sc:"تسجيل الحسابات وضبطها ومراجعتها بدقة…",a:["يضجرني.","أفعله بإتقان عند الحاجة.","أستمتع به وأحب أن أكون محاسباً قانونياً."],bw:{"المحاسبة":.95}},
+  {sc:"المصارف والاستثمار والأسهم والقروض…",a:["لا تشدّني.","أتابعها بقدر مصلحتي.","تستهويني وأود العمل في المصرف أو الاستثمار."],bw:{"العلوم المالية والمصرفية":.95}},
+  {sc:"الإعلانات والعلامات التجارية وإقناع الزبائن…",a:["لا أحب البيع.","أجيده أحياناً.","أعشقه وأحب ابتكار حملة تسويقية."],bw:{"التسويق":.95}},
+  {sc:"قيادة فريق وإدارة مشروع ومتابعة موظفين…",a:["أفضّل العمل وحدي.","أقود عند الحاجة.","أحب القيادة وإدارة الناس والمشاريع."],bw:{"إدارة الأعمال":.9,"التسويق":.2}},
+  {sc:"الاقتصاد العالمي والتجارة بين الدول والسياسات…",a:["بعيدة عني.","أتابعها في الأخبار.","تستهويني وأود تحليلها والعمل فيها."],bw:{"الاقتصاد والعلاقات الاقتصادية الدولية":.95}},
+  {sc:"تحليل بيانات الشركات وأنظمة المعلومات والتأمين…",a:["لا تشدّني.","أستخدمها كأداة.","أراها مجالي: البيانات والنظم في خدمة القرار."],bw:{"الإحصاء ونظم المعلومات":.95}}
+ ]},
+ ART:{n:"الفروع الفنية والتصميمية",m:["الفنون الجميلة التطبيقية","الهندسة المعمارية","هندسة ميكانيك الغزل والنسيج","التسويق"],q:[
+  {sc:"الرسم الحر والنحت والتصوير الفني…",a:["لا أجيدها.","أمارسها كهواية.","هي حياتي وأود احترافها."],bw:{"الفنون الجميلة التطبيقية":.95}},
+  {sc:"تصميم الأبنية والفراغات الداخلية…",a:["لا يشدّني.","أستمتع به أحياناً.","أحلم بتصميم أبنية حقيقية."],bw:{"الهندسة المعمارية":.9,"الفنون الجميلة التطبيقية":.2}},
+  {sc:"الأقمشة والأزياء والألوان والنسيج…",a:["لا تعنيني.","أهتم بمظهري.","أحب تصميم الأقمشة والأزياء وعالم النسيج."],bw:{"هندسة ميكانيك الغزل والنسيج":.8,"الفنون الجميلة التطبيقية":.3}},
+  {sc:"الإعلان والهوية البصرية والشعارات…",a:["لا تشدّني.","ألاحظ الجميل منها.","أود العمل في تصميمها وتسويقها."],bw:{"التسويق":.6,"الفنون الجميلة التطبيقية":.5}}
+ ]}
+};
+var FAM_KEYS=Object.keys(FAMILIES);
+var DECISIVE=[];FAM_KEYS.forEach(function(k){FAMILIES[k].q.forEach(function(it){DECISIVE.push(it);});});
+function familiesOf(name){return FAM_KEYS.filter(function(k){return FAMILIES[k].m.indexOf(name)>=0;});}
+
+/* =====================================================================
+   5) محرك الرحلة (6 محطات أساسية + محطة سابعة تكيفية)
    ===================================================================== */
 var answers=new Array(QUESTIONS.length).fill(null);
+var adFam=null, adAns=[];
 var curSt=0, N_ST=6, PER=4;
 var stationsEl=document.getElementById("stations");
 var journeyEl=document.getElementById("journey");
 function el(h){var d=document.createElement("div");d.innerHTML=h.trim();return d.firstChild;}
 
-function buildJourney(){
-  var h='';
-  for(var i=0;i<N_ST;i++){
-    h+='<div class="st" data-s="'+i+'">'+(i+1)+'</div>';
-    if(i<N_ST-1) h+='<div class="jln" data-l="'+i+'"><i></i></div>';
+function buildJourney(withAdapt){
+  var n=withAdapt?7:6, h='';
+  for(var i=0;i<n;i++){
+    h+='<div class="st'+(i===6?' adapt':'')+'" data-s="'+i+'">'+(i+1)+'</div>';
+    if(i<n-1) h+='<div class="jln" data-l="'+i+'"><i></i></div>';
   }
   journeyEl.innerHTML=h;
 }
 function paintJourney(){
-  journeyEl.querySelectorAll(".st").forEach(function(s){
-    var i=+s.getAttribute("data-s");
-    s.classList.toggle("done",i<curSt);
-    s.classList.toggle("cur",i===curSt);
-  });
-  journeyEl.querySelectorAll(".jln").forEach(function(l){
-    l.classList.toggle("done",+l.getAttribute("data-l")<curSt);
-  });
+  journeyEl.querySelectorAll(".st").forEach(function(s){var i=+s.getAttribute("data-s");s.classList.toggle("done",i<curSt);s.classList.toggle("cur",i===curSt);});
+  journeyEl.querySelectorAll(".jln").forEach(function(l){l.classList.toggle("done",+l.getAttribute("data-l")<curSt);});
 }
+function itemHTML(key,num,it){
+  var o='<div class="q" data-q="'+key+'">'+questionArt(typeof key==="number"?key:(24+(+key.slice(1))))+'<h3><em>'+num+'</em>'+it.sc+'</h3><div class="vs"><i class="vfill"></i>';
+  for(var k=0;k<5;k++){var mid=(k%2===1),txt=mid?"بين الجملتين":it.a[k/2];
+    o+='<button type="button" class="opt '+(mid?'small':'big')+'" style="--c:'+LV[k]+'" data-q="'+key+'" data-v="'+k+'"><span class="knob"><i>'+(mid?'':levelIcon(k,LV[k]))+'</i></span><span class="lb">'+txt+'</span></button>';}
+  return o+'</div></div>';
+}
+function navHTML(last){return '<div class="st-nav"><button class="btn ghost" data-act="back">السابق</button><span class="hint" data-hint></span><button class="btn" data-act="next" disabled>'+(last?"اعرض نتيجتي":"المحطة التالية")+'</button></div>';}
 function buildStations(){
   stationsEl.innerHTML="";
   for(var s=0;s<N_ST;s++){
-    var card=document.createElement("div");
-    card.className="card station"; card.setAttribute("data-s",s);
+    var card=document.createElement("div");card.className="card station";card.setAttribute("data-s",s);
     var inner='<div class="st-head"><h2>المحطة '+(s+1)+' — '+ST_TITLES[s]+'</h2><span>اختر الجملة الأقرب إلى ما تفعله فعلاً</span></div>';
-    for(var q=0;q<PER;q++){
-      var qi=s*PER+q;
-      var it=QUESTIONS[qi];
-      inner+='<div class="q" data-q="'+qi+'">'+questionArt(qi)+'<h3><em>'+(qi+1)+'</em>'+it.sc+'</h3><div class="opts">';
-      for(var o=0;o<5;o++){
-        var mid=(o%2===1), txt=mid?MIDL:it.a[o/2];
-        inner+='<button type="button" class="opt'+(mid?' mid':'')+'" style="--c:'+LV[o]+'" data-q="'+qi+'" data-v="'+o+'">'+
-          '<span class="lv">'+levelIcon(o,LV[o])+'</span><span class="lb">'+txt+'</span></button>';
-      }
-      inner+='</div></div>';
-    }
-    inner+='<div class="st-nav"><button class="btn ghost" data-act="back">السابق</button>'+
-      '<span class="hint" data-hint></span>'+
-      '<button class="btn" data-act="next" disabled>'+(s===N_ST-1?"اعرض نتيجتي":"المحطة التالية")+'</button></div>';
-    card.innerHTML=inner;
-    stationsEl.appendChild(card);
+    for(var q=0;q<PER;q++){var qi=s*PER+q;inner+=itemHTML(qi,qi+1,QUESTIONS[qi]);}
+    inner+=navHTML(false);
+    card.innerHTML=inner;stationsEl.appendChild(card);
   }
   stationsEl.addEventListener("click",onClick);
+}
+function buildAdaptiveStation(sel){
+  var old=stationsEl.querySelector('.station[data-s="6"]'); if(old) old.remove();
+  var card=document.createElement("div");
+  card.className="card station adapt";card.setAttribute("data-s",6);
+  var inner='<div class="st-head"><h2>المحطة الحاسمة — للتمييز بين فروعك الأقرب</h2><span>تقاربت في مقدمة نتيجتك: '+sel.names.join('، ')+'</span></div>';
+  sel.items.forEach(function(it,i){inner+=itemHTML("A"+i,25+i,it);});
+  inner+=navHTML(true);
+  card.innerHTML=inner;stationsEl.appendChild(card);
+  adAns=new Array(sel.items.length).fill(null);
 }
 function onClick(e){
   var b=e.target.closest(".opt");
   if(b){
-    var qi=+b.getAttribute("data-q"), v=+b.getAttribute("data-v");
-    answers[qi]=v;
-    var qEl=b.closest(".q");
-    qEl.querySelectorAll(".opt").forEach(function(o){o.classList.remove("sel");});
-    b.classList.add("sel");
-    refreshStation(Math.floor(qi/PER),qi);
-    return;
+    var key=b.getAttribute("data-q"), v=+b.getAttribute("data-v");
+    if(key.charAt(0)==="A") adAns[+key.slice(1)]=v; else answers[+key]=v;
+    var qEl=b.closest(".q");qEl.querySelectorAll(".opt").forEach(function(o){o.classList.remove("sel");});b.classList.add("sel");
+    (function(){var vs=b.closest(".vs");if(!vs)return;var kn=b.querySelector(".knob i");if(!kn)return;var top=kn.getBoundingClientRect().top-vs.getBoundingClientRect().top+kn.offsetHeight/2;vs.querySelector(".vfill").style.height=Math.max(0,top-16)+"px";})();
+    refreshStation(b.closest(".station"),qEl);return;
   }
   var nav=e.target.closest("[data-act]");
   if(nav){
     if(nav.getAttribute("data-act")==="back"&&curSt>0) showStation(curSt-1);
-    else if(nav.getAttribute("data-act")==="next"&&!nav.disabled){
-      if(curSt<N_ST-1) showStation(curSt+1); else finish();
-    }
+    else if(nav.getAttribute("data-act")==="next"&&!nav.disabled) onNext();
   }
 }
-function refreshStation(s,answeredQi){
-  var card=stationsEl.querySelector('.station[data-s="'+s+'"]');
-  var missing=[];
-  for(var q=0;q<PER;q++){var qi=s*PER+q; if(answers[qi]==null)missing.push(qi);}
-  card.querySelectorAll(".q").forEach(function(qe){
-    var qi=+qe.getAttribute("data-q");
-    qe.classList.toggle("done",answers[qi]!=null);
-    qe.classList.toggle("cur",missing.length>0&&qi===missing[0]);
-  });
+function valOf(key){return key.charAt(0)==="A"?adAns[+key.slice(1)]:answers[+key];}
+function refreshStation(card,answeredEl){
+  var qs=card.querySelectorAll(".q"), missing=[];
+  qs.forEach(function(qe){var k=qe.getAttribute("data-q");qe.classList.toggle("done",valOf(k)!=null);if(valOf(k)==null)missing.push(qe);});
+  qs.forEach(function(qe){qe.classList.toggle("cur",missing.length>0&&qe===missing[0]);});
   var nextBtn=card.querySelector('[data-act="next"]');
   nextBtn.disabled=missing.length>0;
-  card.querySelector("[data-hint]").textContent=missing.length?"بقي "+missing.length+" من 4":"أحسنت — المحطة مكتملة";
-  if(answeredQi!=null&&missing.length>0&&missing[0]>answeredQi){
-    var nq=card.querySelector('.q[data-q="'+missing[0]+'"]');
-    if(nq) setTimeout(function(){nq.scrollIntoView({behavior:"smooth",block:"center"});},260);
-  }
-  if(answeredQi!=null&&missing.length===0){
-    setTimeout(function(){nextBtn.scrollIntoView({behavior:"smooth",block:"center"});},260);
-  }
+  card.querySelector("[data-hint]").textContent=missing.length?"بقي "+missing.length+" من "+qs.length:"أحسنت — المحطة مكتملة";
+  if(answeredEl&&missing.length>0){var idx=Array.prototype.indexOf.call(qs,missing[0]),ai=Array.prototype.indexOf.call(qs,answeredEl);
+    if(idx>ai) setTimeout(function(){missing[0].scrollIntoView({behavior:"smooth",block:"center"});},260);}
+  if(answeredEl&&missing.length===0) setTimeout(function(){nextBtn.scrollIntoView({behavior:"smooth",block:"center"});},260);
 }
 function showStation(s){
   curSt=s;
   stationsEl.querySelectorAll(".station").forEach(function(c){
-    var on=+c.getAttribute("data-s")===s;
-    c.classList.toggle("on",on);
-    if(on){ /* دخول متدرج للأسئلة */
-      c.querySelectorAll(".q").forEach(function(qe,i){
-        qe.classList.remove("anim"); void qe.offsetWidth;
-        qe.style.animationDelay=(i*70)+"ms"; qe.classList.add("anim");
-      });
-    }
+    var on=+c.getAttribute("data-s")===s;c.classList.toggle("on",on);
+    if(on) c.querySelectorAll(".q").forEach(function(qe,i){qe.classList.remove("anim");void qe.offsetWidth;qe.style.animationDelay=(i*70)+"ms";qe.classList.add("anim");});
   });
-  var backB=stationsEl.querySelector('.station[data-s="'+s+'"] [data-act="back"]');
-  backB.style.visibility=s===0?"hidden":"visible";
-  refreshStation(s,null);
-  paintJourney();
-  window.scrollTo({top:0,behavior:"smooth"});
+  var card=stationsEl.querySelector('.station[data-s="'+s+'"]');
+  card.querySelector('[data-act="back"]').style.visibility=s===0?"hidden":"visible";
+  refreshStation(card,null);paintJourney();window.scrollTo({top:0,behavior:"smooth"});
+}
+function onNext(){
+  if(curSt<N_ST-1){showStation(curSt+1);return;}
+  if(curSt===N_ST-1){
+    var dims=computeDims(answers), scored=scoreBranches(dims,answers,null,null), sel=pickDecisive(scored);
+    if(sel){adFam=sel;buildAdaptiveStation(sel);buildJourney(true);showStation(6);return;}
+    adFam=null;finish();return;
+  }
+  finish();
 }
 
 /* =====================================================================
-   6) الحساب (محاور + سمات)
+   6) الحساب (محاور + سمات + المحطة الحاسمة) — دوال نقية لتُختبر خارج المتصفح
    ===================================================================== */
-function computeDims(){
-  var sum={},max={};
-  ALLD.forEach(function(d){sum[d]=0;max[d]=0;});
-  QUESTIONS.forEach(function(q,qi){
-    var v=answers[qi]==null?0:answers[qi];
-    Object.keys(q.w).forEach(function(d){sum[d]+=v*q.w[d];max[d]+=4*q.w[d];});
-  });
-  var out={};
-  ALLD.forEach(function(d){out[d]=max[d]?sum[d]/max[d]:0;});
-  return out;
+function computeDims(ans){
+  var sum={},max={};ALLD.forEach(function(d){sum[d]=0;max[d]=0;});
+  QUESTIONS.forEach(function(q,qi){var v=ans[qi]==null?0:ans[qi];Object.keys(q.w).forEach(function(d){sum[d]+=v*q.w[d];max[d]+=4*q.w[d];});});
+  var out={};ALLD.forEach(function(d){out[d]=max[d]?sum[d]/max[d]:0;});return out;
 }
-function scoreBranches(dims){
-  var longY=answers[23]==null?2:answers[23];
+function scoreBranches(dims,ans,sel,adA){
+  var longY=ans[23]==null?2:ans[23];
+  var fam=sel?{q:sel.items}:null;
   return BRANCHES.map(function(b){
-    var num=0,den=0;
-    Object.keys(b.w).forEach(function(d){num+=b.w[d]*dims[d];den+=b.w[d];});
+    var num=0,den=0;Object.keys(b.w).forEach(function(d){num+=b.w[d]*dims[d];den+=b.w[d];});
     var sc=den?num/den:0;
-    if(b.y>=6) sc*=(0.84+0.08*longY);
-    else if(b.y===5) sc*=(0.90+0.05*longY);
-    return {b:b,sc:Math.min(sc,1)};
+    if(b.y>=6)sc*=(0.84+0.08*longY);else if(b.y===5)sc*=(0.90+0.05*longY);
+    if(fam&&adA){var acc=0,tot=0;fam.q.forEach(function(it,i){var w=it.bw[b.n];if(w!=null&&adA[i]!=null){acc+=w*((adA[i]/4)*2-1);tot+=Math.abs(w);}});
+      if(tot>0) sc+=0.17*(acc/Math.max(1,tot));}
+    return {b:b,sc:Math.max(0,Math.min(sc,1))};
   }).sort(function(a,c){return c.sc-a.sc;});
 }
-
+function pickDecisive(scored){
+  var K=8, MAXI=6, cand=[];
+  scored.slice(0,K).forEach(function(m,i){ if(cand.indexOf(m.b.n)<0) cand.push(m.b.n); if(i<4) (m.b.sim||[]).forEach(function(n){ if(cand.indexOf(n)<0) cand.push(n); }); });
+  var chosen=[], strong={};
+  function touches(it){return cand.filter(function(n){return it.bw[n]!=null;}).length;}
+  /* 1) لكل مرشح (بترتيب قربه) موقف قوي يميّزه (|وزن| ≥ .7) */
+  cand.forEach(function(n){
+    if(strong[n]||chosen.length>=MAXI) return;
+    var best=null,bw=0;
+    DECISIVE.forEach(function(it){ if(chosen.indexOf(it)>=0) return; var w=it.bw[n]; if(w==null) return;
+      var s=Math.abs(w)+0.05*touches(it); if(s>bw){bw=s;best=it;} });
+    if(best&&Math.abs(best.bw[n])>=.7){ chosen.push(best); cand.forEach(function(m){ if(best.bw[m]!=null&&Math.abs(best.bw[m])>=.7) strong[m]=true; }); }
+  });
+  /* 2) إكمال حتى 6 بالمواقف الأكثر تمييزاً بين المرشحين */
+  var pool=DECISIVE.filter(function(it){return chosen.indexOf(it)<0&&touches(it)>0;})
+    .map(function(it){var s=0;cand.forEach(function(n){if(it.bw[n]!=null)s+=Math.abs(it.bw[n]);});return {it:it,s:s};})
+    .sort(function(x,y){return y.s-x.s;});
+  while(chosen.length<MAXI&&pool.length){chosen.push(pool.shift().it);}
+  if(chosen.length<2) return null;
+  var names=cand.filter(function(n){return chosen.some(function(it){return it.bw[n]!=null;});});
+  return {items:chosen, names:names.slice(0,4)};
+}
 /* =====================================================================
    7) مكونات النتائج
    ===================================================================== */
@@ -1252,8 +1505,10 @@ function cardHTML(m,rank,dims){
    8) النتائج
    ===================================================================== */
 function finish(){
-  var dims=computeDims();
-  var top=scoreBranches(dims).slice(0,5);
+  var dims=computeDims(answers);
+  var top=scoreBranches(dims,answers,adFam,adAns).slice(0,5);
+  var sub=document.querySelector("#results .res-sub");
+  if(sub){sub.innerHTML="مرتبة حسب قربها من شخصيتك — واللون يعبّر عن المرتبة. الفرع الذي له معهد تقانٍ موازٍ ستجد التنويه في بطاقته."+(adFam?' <span class="chip inst" style="margin-inline-start:6px">شمل التقييم محطة حاسمة للتمييز بين: '+adFam.names.join('، ')+'</span>':'');}
   document.getElementById("heroBox").innerHTML=cardHTML(top[0],0,dims);
   var subs='';
   for(var i=1;i<5;i++) subs+=cardHTML(top[i],i,dims);
@@ -1392,6 +1647,11 @@ function buildLegend(dims){
 
 /* خطوتك التالية */
 var SUBJ={SCI:"الرياضيات أو الفيزياء",TECH:"المعلوماتية",MED:"علم الأحياء",ENG:"الفيزياء",ART:"التربية الفنية",LANG:"اللغة العربية أو الأجنبية",SOC:"علم النفس أو التربية",BUS:"الرياضيات",LAW:"التربية الوطنية",NAT:"علم الأحياء"};
+function tipArt(i){
+  var sets=[["qmark","bulb","note","magnifier","chat"],["people","chat","cap","hand","team"],["map","compass","flag","globe","book"]];
+  var cols=["#7FD4FF","#FFB37F","#4ED8A8"];
+  return '<svg class="bgart" viewBox="0 0 900 280" preserveAspectRatio="xMaxYMin slice" aria-hidden="true">'+motifArt(sets[i],cols[i],500+i*17)+'</svg>';
+}
 function buildTips(top,dims){
   var b1=top[0].b, b2=top[1].b;
   var d1=CORE.map(function(d){return {d:d,v:dims[d]};}).sort(function(a,c){return c.v-a.v;})[0].d;
@@ -1419,7 +1679,7 @@ function buildTips(top,dims){
   ];
   var g=document.getElementById("tipsGrid");
   g.innerHTML=cols.map(function(c,i){
-    return '<div class="tip-col anim" style="animation-delay:'+(i*130)+'ms"><div class="tc-h">'+
+    return '<div class="tip-col anim" style="animation-delay:'+(i*130)+'ms">'+tipArt(i)+'<div class="tc-h">'+
       '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--lbl)" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">'+c.ic+'</svg>'+c.h+'</div>'+
       '<ul>'+c.items.map(function(t){return '<li>'+t+'</li>';}).join('')+'</ul></div>';
   }).join('');
@@ -1432,13 +1692,13 @@ function buildTips(top,dims){
    ===================================================================== */
 function start(){
   document.getElementById("intro").style.display="none";
-  buildJourney();buildStations();
+  adFam=null;adAns=[];buildJourney(false);buildStations();
   journeyEl.classList.add("on");
   showStation(0);
 }
 document.getElementById("startBtn").addEventListener("click",start);
 document.getElementById("againBtn").addEventListener("click",function(){
-  answers=new Array(QUESTIONS.length).fill(null);
+  answers=new Array(QUESTIONS.length).fill(null);adFam=null;adAns=[];
   document.getElementById("results").style.display="none";
   start();
 });
@@ -1455,7 +1715,23 @@ document.getElementById("againBtn").addEventListener("click",function(){
     her: [1,2,1,2, 1,2,1,1, 2,2,2,2, 1,2,1,2, 1,1,1,3, 4,2,1,2]
   };
   answers=(profiles[m[1]]||profiles.tech).slice();
+  var sel=pickDecisive(scoreBranches(computeDims(answers),answers,null,null));
+  if(m[1]==="adapt"){answers=profiles.tech.slice();sel=pickDecisive(scoreBranches(computeDims(answers),answers,null,null));document.getElementById("intro").style.display="none";buildStations();adFam=sel;buildAdaptiveStation(sel);buildJourney(true);journeyEl.classList.add("on");showStation(6);return;}
+  if(sel){adFam=sel;var lead=scoreBranches(computeDims(answers),answers,null,null)[0].b.n;adAns=sel.items.map(function(it){var w=it.bw[lead];return w==null?2:(w>0?4:0);});}
   finish();
+})();
+
+/* تبدّل هادئ للأصفار والواحدات والحروف في النقوش الظاهرة */
+(function(){
+  var reduce=window.matchMedia&&window.matchMedia("(prefers-reduced-motion: reduce)").matches; if(reduce) return;
+  function visible(el){var st=el.closest(".station"); if(st&&!st.classList.contains("on")) return false; var res=el.closest("#results"); if(res&&res.style.display==="none") return false; return true;}
+  setInterval(function(){
+    var bts=Array.prototype.filter.call(document.querySelectorAll(".bgart .bt"),visible);
+    for(var i=0;i<Math.min(3,bts.length);i++){(function(t){t.classList.add("off");setTimeout(function(){t.textContent=t.textContent==="0"?"1":"0";t.classList.remove("off");},900);})(bts[Math.floor(Math.random()*bts.length)]);}
+    var lts=Array.prototype.filter.call(document.querySelectorAll(".bgart .lt"),visible);
+    if(lts.length){var t=lts[Math.floor(Math.random()*lts.length)],set=t.getAttribute("data-set");var arr=set.indexOf("|")>=0?set.split("|"):set.split("");
+      t.classList.add("off");setTimeout(function(){t.textContent=arr[Math.floor(Math.random()*arr.length)];t.classList.remove("off");},800);}
+  },1600);
 })();
 </script>
 </body>
