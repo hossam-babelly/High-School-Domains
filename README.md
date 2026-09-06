@@ -23,7 +23,7 @@
 | الموقع منشور كملفات ثابتة (Render Blueprint الحالي) | `tools/apps-script.gs` | خدمة مجانية على Google Apps Script + جدول يسجّل الرموز؛ خطوات النشر داخل الملف |
 | الموقع على سيرفر خاص | `tools/server.js` | خادم Node بلا مكتبات: `node tools/server.js` يقدّم الصفحة ويوفّر `/api/redeem` ويحفظ `redeemed.json` |
 
-بعد تجهيز الأداة، افتح `index.html` وضع الرابط في السطر:
+**في هذه الحزمة الخدمة مفعّلة فعلاً**: الرابط موضوع في `index.html` ويشير إلى خدمة Apps Script فوق ملف **Domains-Codes**، وقد جُرّبت بجهازين فرُفض الرمز المكرر. لتغيير الخدمة أو تعطيلها عدّل السطر:
 
 ```js
 var REDEEM_URL="";

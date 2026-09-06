@@ -1859,7 +1859,7 @@ var APP_URL="https://qlink.cloud/Domains-QR";
 var CODE_LEN=14;                 /* طول الرمز المقبول — لا يُذكر للمستخدم */
 /* ★★ لمنع إعارة الرمز بين الأجهزة: ضع هنا رابط خدمة تسجيل الرموز (tools/apps-script.gs أو tools/server.js) ★★
    فارغاً = تحقق محلي بالمتصفح فقط (لا يمنع الإعارة). */
-var REDEEM_URL="";
+var REDEEM_URL="https://script.google.com/macros/s/AKfycbxH81l_1__tevrAI-c_f2GBtFdwMbgaqKwao1xwTK5aY87rn1OHrudhxmuCL8CBOHrs/exec";
 var UNLOCK_KEY="boussala-unlock";
 var USED_KEY="boussala-used";     /* الرموز التي استُهلكت على هذا الجهاز */
 function usedList(){ try{ var a=JSON.parse(localStorage.getItem(USED_KEY)||"[]"); return (a&&a.length)?a:[]; }catch(e){ return []; } }
