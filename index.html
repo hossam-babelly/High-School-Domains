@@ -348,6 +348,44 @@ html[data-theme="light"] .oc::after,html[data-theme="light"] .q::after,html[data
 @keyframes bob{0%,100%{transform:translateY(0) rotate(0)}50%{transform:translateY(-5px) rotate(4deg)}}
 @media (prefers-reduced-motion: reduce){.oc::after,.q::after,.tip-col::after,.bgart *{animation:none !important}}
 @media print{.oc::after,.q::after,.tip-col::after{display:none}}
+
+/* ====== بوابة الرمز ====== */
+.gate-card{text-align:center;position:relative}
+.gate-lock{width:64px;height:64px;margin:2px auto 10px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+  background:radial-gradient(circle at 50% 35%,color-mix(in srgb,var(--brand) 30%,transparent),transparent 70%);
+  border:1.6px solid color-mix(in srgb,var(--brand) 55%,transparent);box-shadow:0 0 22px color-mix(in srgb,var(--brand) 30%,transparent)}
+.gate-lock svg{width:28px;height:28px}
+.gate-card h2{font-size:1.18rem;margin-bottom:6px}
+.gate-sub{color:var(--muted2);font-size:.92rem;line-height:1.85;max-width:600px;margin:0 auto}
+.gate-form{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin:16px auto 4px;max-width:540px}
+.gate-form input{flex:1 1 250px;min-width:0;padding:12px 16px;border-radius:13px;border:1.6px solid var(--line);
+  background:var(--surface2);color:var(--ink);font-size:1rem;text-align:center;letter-spacing:.05em;
+  font-family:Poppins,"IBM Plex Sans Arabic",sans-serif;transition:border-color .2s,box-shadow .2s,background .2s}
+.gate-form input::placeholder{color:var(--muted);letter-spacing:0;font-family:"IBM Plex Sans Arabic",sans-serif}
+.gate-form input:focus{outline:none;border-color:var(--brand);background:var(--surface);box-shadow:0 0 0 3px color-mix(in srgb,var(--brand) 22%,transparent)}
+.gate-form .btn{flex:0 0 auto}
+.gate-err{min-height:20px;font-size:.85rem;color:#FF8FA3;margin-top:2px}
+.gate-form.bad input{border-color:#FF8FA3;animation:gshake .4s}
+@keyframes gshake{0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+.gate-hint{margin:16px auto 0;max-width:660px;padding:16px;border-radius:16px;border:1px dashed var(--line);
+  background:var(--surface2);text-align:center}
+.gate-hint p{font-size:.94rem;line-height:1.9;color:var(--muted2);margin:0}
+.gate-hint p+p{margin-top:2px}
+.gate-hint b{color:var(--ink);font-weight:700}
+.app-card{margin:14px auto 2px;max-width:430px;display:flex;align-items:center;justify-content:center;gap:14px;
+  padding:12px 16px;border-radius:16px;text-decoration:none;color:var(--ink);
+  border:1.5px solid color-mix(in srgb,var(--accent) 45%,transparent);
+  background:linear-gradient(180deg,color-mix(in srgb,var(--accent) 13%,transparent),transparent);
+  transition:transform .2s ease,box-shadow .25s ease,border-color .2s ease}
+.app-card:hover{transform:translateY(-2px);border-color:var(--accent);box-shadow:0 8px 26px color-mix(in srgb,var(--accent) 22%,transparent)}
+.app-card .ap-ic{flex:0 0 auto;width:27px;height:27px;color:var(--accent);display:flex}
+.app-card .ap-ic svg{width:100%;height:100%}
+.app-card .ap-url{font-family:Poppins,sans-serif;font-size:.9rem;font-weight:600;line-height:1.45;word-break:break-all}
+.app-soon{margin-top:12px;display:inline-flex;align-items:center;gap:7px;padding:7px 13px;border-radius:99px;
+  border:1px dashed var(--line);background:transparent;color:var(--muted);font-size:.82rem}
+.gate-form .btn[disabled]{opacity:.65;cursor:progress}
+@media (max-width:520px){.gate-form .btn{width:100%}.app-card{gap:10px;padding:11px 12px}.app-card .ap-url{font-size:.8rem}}
+@media print{.gate-card{display:none !important}}
 </style>
 </head>
 <body>
@@ -400,7 +438,7 @@ html[data-theme="light"] .oc::after,html[data-theme="light"] .q::after,html[data
 
   <!-- ====== النتائج ====== -->
   <div id="results">
-    <div class="card">
+    <div class="card" id="branchesCard">
       <div class="res-title">
         <svg width="30" height="30" viewBox="0 0 24 24" fill="none">
           <circle cx="12" cy="12" r="9.5" stroke="var(--brand)" stroke-width="1.6"/>
@@ -420,6 +458,27 @@ html[data-theme="light"] .oc::after,html[data-theme="light"] .q::after,html[data
       <div class="legend" id="legend"></div>
     </div>
 
+    <div class="card gate-card" id="gateCard" style="display:none">
+      <div class="gate-lock">
+        <svg viewBox="0 0 24 24" fill="none"><path d="M7 10V7.5a5 5 0 0 1 10 0V10" stroke="var(--brand)" stroke-width="1.8" stroke-linecap="round"/><rect x="4.2" y="10" width="15.6" height="10.6" rx="2.6" stroke="var(--brand)" stroke-width="1.8"/><circle cx="12" cy="15.3" r="1.5" fill="var(--accent)"/><path d="M12 16.6v2" stroke="var(--accent)" stroke-width="1.8" stroke-linecap="round"/></svg>
+      </div>
+      <h2>نتيجتك الكاملة بانتظارك</h2>
+      <p class="gate-sub">هذه حلقة ميولك كما ظهرت من إجاباتك. أدخل الرمز لعرض النتيجة الكاملة والاختصاصات الجامعية المقترحة حسب شخصيتك.</p>
+      <form class="gate-form" id="gateForm" autocomplete="off">
+        <input id="codeInput" type="text" inputmode="text" dir="auto" maxlength="60" spellcheck="false" autocomplete="off" placeholder="أدخل الرمز هنا" aria-label="رمز عرض النتيجة الكاملة">
+        <button type="submit" class="btn" id="gateBtn">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M4 12h13M12 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          عرض النتيجة
+        </button>
+      </form>
+      <div class="gate-err" id="gateErr" role="alert"></div>
+      <div class="gate-hint">
+        <p>لكي تحصل على الرمز قم بتحميل تطبيق <b>Domains</b> وانضم معنا</p>
+        <p>قم بإنشاء <b>حساب طالب شهادة ثانوية</b> واحصل على الرمز فوراً</p>
+        <div id="appLinkBox"></div>
+      </div>
+    </div>
+
     <div class="card" id="tipsCard">
       <div class="res-title">
         <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
@@ -433,13 +492,13 @@ html[data-theme="light"] .oc::after,html[data-theme="light"] .q::after,html[data
     </div>
 
     <div class="actions">
-      <button class="btn ghost" id="againBtn">إعادة الرحلة</button>
-      <button class="btn" onclick="window.print()">
+      <button class="btn" id="printBtn" onclick="window.print()">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M7 8V3h10v5M7 17H4a1 1 0 0 1-1-1v-6a1 1 0 0 1 1-1h16a1 1 0 0 1 1 1v6a1 1 0 0 1-1 1h-3m-10-3h10v7H7v-7Z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></svg>
         طباعة نتيجتي
       </button>
     </div>
   </div>
+
 
   <footer>
     بيانات الفروع من مفاضلة القبول الرسمية وموقع جامعة حلب — www.alepuniv.edu.sy<br>
@@ -1593,27 +1652,32 @@ function cardHTML(m,rank,dims){
    ===================================================================== */
 function finish(){
   var dims=computeDims(answers);
-  var top=scoreBranches(dims,answers,adFam,adAns).slice(0,5);
-  var sub=document.querySelector("#results .res-sub");
+  pending={top:scoreBranches(dims,answers,adFam,adAns).slice(0,5),dims:dims};
+  buildLegend(pending.dims);
+  document.getElementById("intro").style.display="none";
+  stationsEl.style.display="none";
+  journeyEl.classList.remove("on");
+  document.getElementById("results").style.display="block";
+  applyLock(!isUnlocked());
+  window.scrollTo({top:0,behavior:"smooth"});
+  drawWheel(pending.dims,true);
+  if(isUnlocked()) revealFull();
+  else { var ci=document.getElementById("codeInput"); if(ci) ci.value=""; }
+}
+/* يُبنى محتوى الفروع والنصائح بعد الرمز فقط — لا يوجد في الصفحة قبل ذلك */
+function revealFull(){
+  if(!pending) return;
+  var top=pending.top, dims=pending.dims;
+  var sub=document.querySelector("#branchesCard .res-sub");
   if(sub){sub.innerHTML="مرتبة حسب قربها من شخصيتك — واللون يعبّر عن المرتبة. الفرع الذي له معهد تقانٍ موازٍ ستجد التنويه في بطاقته."+(adFam?' <span class="chip inst" style="margin-inline-start:6px">شمل التقييم محطة حاسمة للتمييز بين: '+adFam.names.join('، ')+'</span>':'');}
   if(sub&&lastClarity<0.35) sub.innerHTML+=' <span class="chip inst" style="margin-top:6px;display:inline-block">ميولك متقاربة في هذه الإجابات — اعتبر الترتيب مؤشراً أولياً، واستعن بالمحطة الحاسمة ونصائح «خطوتك التالية» قبل أن تحسم.</span>';
   document.getElementById("heroBox").innerHTML=cardHTML(top[0],0,dims);
   var subs='';
   for(var i=1;i<5;i++) subs+=cardHTML(top[i],i,dims);
   document.getElementById("subsBox").innerHTML=subs;
-  /* ترتيب الحلقة داخل الترويسة */
-  document.querySelectorAll(".oc .head .gauge-slot .gauge").forEach(function(g){
-    g.parentNode.parentNode.appendChild; /* البنية جاهزة عبر CSS (.head .gauge absolute) */
-  });
-  buildLegend(dims);
   buildTips(top,dims);
-  document.getElementById("intro").style.display="none";
-  stationsEl.style.display="none";
-  journeyEl.classList.remove("on");
-  document.getElementById("results").style.display="block";
-  window.scrollTo({top:0,behavior:"smooth"});
+  applyLock(false);
   animateGauges();
-  drawWheel(dims,true);
 }
 function animateGauges(){
   var reduce=window.matchMedia&&window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -1780,19 +1844,94 @@ function buildTips(top,dims){
    ===================================================================== */
 function start(){
   document.getElementById("intro").style.display="none";
+  stationsEl.style.display="";   /* إصلاح: النتيجة تخفيها، والإعادة تعيد إظهارها */
   adFam=null;adAns=[];buildJourney(false);buildStations();
   journeyEl.classList.add("on");
   showStation(0);
 }
 document.getElementById("startBtn").addEventListener("click",start);
-document.getElementById("againBtn").addEventListener("click",function(){
-  answers=new Array(QUESTIONS.length).fill(null);adFam=null;adAns=[];
-  document.getElementById("results").style.display="none";
-  start();
-});
+
+/* =====================================================================
+   بوابة الرمز — النتيجة الكاملة تُفتح برمز يحصل عليه الطالب من تطبيق Domains
+   ★★ رابط التطبيق: ضع الرابط بين علامتي التنصيص فور توفره — لا شيء آخر يحتاج تعديلاً ★★
+   ===================================================================== */
+var APP_URL="https://qlink.cloud/Domains-QR";
+var CODE_LEN=14;                 /* طول الرمز المقبول — لا يُذكر للمستخدم */
+/* ★★ لمنع إعارة الرمز بين الأجهزة: ضع هنا رابط خدمة تسجيل الرموز (tools/apps-script.gs أو tools/server.js) ★★
+   فارغاً = تحقق محلي بالمتصفح فقط (لا يمنع الإعارة). */
+var REDEEM_URL="";
+var UNLOCK_KEY="boussala-unlock";
+var USED_KEY="boussala-used";     /* الرموز التي استُهلكت على هذا الجهاز */
+function usedList(){ try{ var a=JSON.parse(localStorage.getItem(USED_KEY)||"[]"); return (a&&a.length)?a:[]; }catch(e){ return []; } }
+function isUsed(v){ return usedList().indexOf(v)>=0; }
+function markUsed(v){ try{ var a=usedList(); if(a.indexOf(v)<0){ a.push(v); if(a.length>300) a=a.slice(-300); localStorage.setItem(USED_KEY,JSON.stringify(a)); } }catch(e){} }
+function activeCode(){ try{ return localStorage.getItem(UNLOCK_KEY); }catch(e){ return null; } }
+var unlockedNow=false, pending=null;
+function codeOK(v){return String(v==null?"":v).trim().length===CODE_LEN;}
+function isUnlocked(){ if(unlockedNow) return true; return codeOK(activeCode()); }
+function applyLock(locked){
+  var ids=[["branchesCard",!locked],["tipsCard",!locked],["printBtn",!locked],["gateCard",locked]];
+  ids.forEach(function(p){ var el=document.getElementById(p[0]); if(el) el.style.display=p[1]?"":"none"; });
+}
+(function(){
+  var box=document.getElementById("appLinkBox"); if(!box) return;
+  if(APP_URL){
+    box.innerHTML='<a class="app-card" href="'+APP_URL+'" target="_blank" rel="noopener" aria-label="تحميل تطبيق Domains">'+
+      '<span class="ap-ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7.8 4.7 6.5 2.6M16.2 4.7 17.5 2.6"/><path d="M5.7 10.3a6.3 6.3 0 0 1 12.6 0Z"/><circle cx="9.5" cy="7.6" r=".95" fill="currentColor" stroke="none"/><circle cx="14.5" cy="7.6" r=".95" fill="currentColor" stroke="none"/><rect x="5.7" y="11.7" width="12.6" height="7.5" rx="1.8"/><rect x="2" y="11.7" width="2.2" height="5.6" rx="1.1"/><rect x="19.8" y="11.7" width="2.2" height="5.6" rx="1.1"/><path d="M9.2 19.2v2.2M14.8 19.2v2.2"/></svg></span>'+
+      '<span class="ap-url" dir="ltr">'+APP_URL+'</span>'+
+      '<span class="ap-ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M16.4 12.7c0-2 1.3-3 1.4-3.1-.8-1.2-2-1.4-2.5-1.4-1-.1-2 .6-2.6.6-.5 0-1.4-.6-2.3-.6-1.2 0-2.3.7-2.9 1.8-1.2 2.1-.3 5.2.9 6.9.6.8 1.3 1.8 2.2 1.8.9 0 1.2-.6 2.2-.6s1.3.6 2.2.5c.9 0 1.5-.8 2.1-1.7.4-.6.7-1.2.9-1.9-1.6-.6-1.6-2.2-1.6-2.3Z"/><path d="M14.3 6.5c.5-.6.8-1.5.7-2.4-.8.1-1.7.6-2.2 1.2-.5.6-.9 1.4-.7 2.3.8.1 1.7-.4 2.2-1.1Z"/></svg></span></a>';
+  } else {
+    box.innerHTML='<span class="app-soon">'+
+      '<svg width="14" height="14" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.8"/><path d="M12 7.2V12l3.2 2" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>رابط التطبيق: سيتوفر قريباً</span>';
+  }
+})();
+(function(){
+  var f=document.getElementById("gateForm"); if(!f) return;
+  var inp=document.getElementById("codeInput"), err=document.getElementById("gateErr"), btn=document.getElementById("gateBtn");
+  var busy=false, btnHTML=btn.innerHTML;
+  var M_EMPTY="الرجاء إدخال الرمز أولاً.",
+      M_BAD="الرمز غير صحيح — تأكد من نسخه كاملاً كما ظهر في التطبيق.",
+      M_USED="هذا الرمز سبق استخدامه — لكل طالب رمزه الخاص من التطبيق.",
+      M_NET="تعذّر التحقق من الرمز الآن. تأكد من اتصالك بالإنترنت ثم أعد المحاولة.";
+  function fail(msg){ err.textContent=msg; f.classList.remove("bad"); void f.offsetWidth; f.classList.add("bad"); inp.focus(); }
+  function done(){ busy=false; btn.disabled=false; btn.innerHTML=btnHTML; }
+  function unlock(v){
+    err.textContent=""; f.classList.remove("bad"); unlockedNow=true;
+    markUsed(v);                                   /* يُستهلك فور فتح النتيجة */
+    try{ localStorage.setItem(UNLOCK_KEY,v); }catch(e){}
+    revealFull();
+    var bc=document.getElementById("branchesCard");
+    if(bc) setTimeout(function(){ bc.scrollIntoView({behavior:"smooth",block:"start"}); },140);
+  }
+  function verify(v){                              /* تحقق مركزي: أول جهاز يستخدم الرمز يملكه */
+    busy=true; btn.disabled=true; btn.innerHTML="جارٍ التحقق…"; err.textContent="";
+    var x=new XMLHttpRequest();
+    x.open("GET", REDEEM_URL+(REDEEM_URL.indexOf("?")>=0?"&":"?")+"code="+encodeURIComponent(v), true);
+    x.timeout=15000;
+    x.onload=function(){ done(); var r=null; try{ r=JSON.parse(x.responseText); }catch(e){}
+      if(r&&r.ok) unlock(v);
+      else if(r&&r.reason==="used"){ markUsed(v); fail(M_USED); }
+      else if(r&&r.reason==="bad") fail(M_BAD);
+      else fail(M_NET); };
+    x.onerror=function(){ done(); fail(M_NET); };
+    x.ontimeout=function(){ done(); fail(M_NET); };
+    x.send();
+  }
+  f.addEventListener("submit",function(e){
+    e.preventDefault(); if(busy) return;
+    var v=(inp.value||"").trim(), cur=String(activeCode()||"").trim();
+    if(!codeOK(v)){ fail(v?M_BAD:M_EMPTY); return; }
+    if(isUsed(v)&&v!==cur){ fail(M_USED); return; }
+    if(REDEEM_URL) verify(v); else unlock(v);
+  });
+  inp.addEventListener("input",function(){ if(err.textContent){err.textContent="";f.classList.remove("bad");} });
+})();
+
+
 (function demo(){
   var m=location.search.match(/demo=(\w+)/);
   if(!m)return;
+  if(!/[?&]lock=1/.test(location.search)) unlockedNow=true; /* المعاينة تفتح النتيجة إلا مع lock=1 */
   if(m[1]==="start"){start();return;}
   var targets={tech:"الهندسة المعلوماتية",med:"الطب البشري",art:"الفنون الجميلة التطبيقية",bus:"إدارة الأعمال",lang:"اللغة الإنكليزية وآدابها",her:"الآثار",adapt:"الهندسة المعلوماتية"};
   function profileFor(name){var T=null;BRANCHES.forEach(function(b){if(b.n===name)T=b;});if(!T)T=BRANCHES[3];
