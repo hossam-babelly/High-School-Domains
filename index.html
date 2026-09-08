@@ -1856,6 +1856,8 @@ document.getElementById("startBtn").addEventListener("click",start);
    ★★ رابط التطبيق: ضع الرابط بين علامتي التنصيص فور توفره — لا شيء آخر يحتاج تعديلاً ★★
    ===================================================================== */
 var APP_URL="https://qlink.cloud/Domains-QR";
+/* ★★ مفتاح البوابة: false = تظهر النتيجة كاملة بلا رمز (وضع التجريب) · true = يُطلب الرمز ★★ */
+var GATE_ON=false;
 var CODE_LEN=14;                 /* طول الرمز المقبول — لا يُذكر للمستخدم */
 /* ★★ لمنع إعارة الرمز بين الأجهزة: ضع هنا رابط خدمة تسجيل الرموز (tools/apps-script.gs أو tools/server.js) ★★
    فارغاً = تحقق محلي بالمتصفح فقط (لا يمنع الإعارة). */
@@ -1868,7 +1870,7 @@ function markUsed(v){ try{ var a=usedList(); if(a.indexOf(v)<0){ a.push(v); if(a
 function activeCode(){ try{ return localStorage.getItem(UNLOCK_KEY); }catch(e){ return null; } }
 var unlockedNow=false, pending=null;
 function codeOK(v){return String(v==null?"":v).trim().length===CODE_LEN;}
-function isUnlocked(){ if(unlockedNow) return true; return codeOK(activeCode()); }
+function isUnlocked(){ if(!GATE_ON) return true; if(unlockedNow) return true; return codeOK(activeCode()); }
 function applyLock(locked){
   var ids=[["branchesCard",!locked],["tipsCard",!locked],["printBtn",!locked],["gateCard",locked]];
   ids.forEach(function(p){ var el=document.getElementById(p[0]); if(el) el.style.display=p[1]?"":"none"; });
